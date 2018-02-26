@@ -1,0 +1,42 @@
+{
+
+    "manifest_version": 2,
+    "name": "Anti Clickbait",
+    "version": "1.0",
+
+    "applications": {
+      "gecko": {
+        "id": "anti-clickbait@oxrn",
+        "strict_min_version": "42.0"
+      }
+    },
+
+    "description": " A web extension that shows community-submitted, important timemarks on YouTube videos.",
+    "homepage_url": "https://github.com/oxrn/anti-clickbait-webext",
+    "icons": {
+        "48": "img/logo-48x48.png",
+        "96": "img/logo-96x96.png"
+    },
+
+    "permissions": [
+      "*://www.youtube.com/*",
+      "activeTab"
+    ],
+
+    "content_scripts": [
+      {
+        "matches": ["*://www.youtube.com/watch?*"],
+        "js": ["anticlickbait.js"]
+      }
+    ],
+
+    "browser_action": {
+      "browser_style": false,
+      "default_icon": {
+        "16": "img/logo-16x16.png",
+        "32": "img/logo-32x32.png"
+      },
+      "default_title": "Anti Clickbait",
+      "default_popup": "popup/popup.html"
+  }
+}
