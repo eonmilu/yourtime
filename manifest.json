@@ -20,13 +20,14 @@
 
     "permissions": [
       "*://www.youtube.com/*",
-      "activeTab"
+      "activeTab",
+      "webRequest"
     ],
 
     "content_scripts": [
       {
         "matches": ["*://www.youtube.com/watch?*"],
-        "js": ["anticlickbait.js"]
+        "js": ["content.js"]
       }
     ],
 
