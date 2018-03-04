@@ -1,17 +1,30 @@
-// generic error handler
-function onError(error){
-    console.log(error);
+const REQUEST_URL = "https://oxygenrain.com/yourtime/timemarks.php?";
+
+function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange =
+    function() {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous
+    xmlHttp.send(null);
 }
 
-function GetVideoID(){
-    // gets id of youtube video from url
-    // regex ignores "v=" to reuse on GET method
-    return window.location.href.match(/v=[^&]*/);
-}
+// gets id of youtube video from url
+// regex ignores "v=" to reuse on GET method
+var id = window.location.href.match(/v=[^&]*/);
 
-var id = GetVideoID()[0];
-console.log("Working with: " + id);
+var htmltemplate = "";
 
-browser.runtime.sendMessage({"url": e.target.href});
+fetch('template.html')
+.then(response => response.text())
+.then(text => htmltemplate=text);
 
-document.getElementById("count").innerHTML = rp;
+document.getElementById("container").innerHTML += htmltemplate;
+
+httpGetAsync(REQUEST_URL + id, function(rp){
+
+    console.log(id + " done");
+});
