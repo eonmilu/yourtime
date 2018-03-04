@@ -1,27 +1,27 @@
 {
 
     "manifest_version": 2,
-    "name": "Anti Clickbait",
+    "name": "Your Time: Anti-Clickbait",
     "version": "1.0",
 
     "applications": {
       "gecko": {
-        "id": "anti-clickbait@oxrn",
+        "id": "your-time@oxrn",
         "strict_min_version": "42.0"
       }
     },
 
-    "description": " A web extension that shows community-submitted, important timemarks on YouTube videos.",
-    "homepage_url": "https://github.com/oxrn/anti-clickbait-webext",
+    "description": " A web extension that shows important, community-submitted timemarks on YouTube videos.",
+    "homepage_url": "https://github.com/oxrn/your-time",
     "icons": {
         "48": "img/logo-48x48.png",
         "96": "img/logo-96x96.png"
     },
 
     "permissions": [
-      "*://www.youtube.com/*",
-      "activeTab",
-      "webRequest"
+      "*://www.youtube.com/watch?*",
+      "*://oxygenrain.com/yourtime/timemarks.php*",
+      "activeTab"
     ],
 
     "content_scripts": [
@@ -37,7 +37,7 @@
         "16": "img/logo-16x16.png",
         "32": "img/logo-32x32.png"
       },
-      "default_title": "Anti Clickbait",
+      "default_title": "Your Time",
       "default_popup": "popup/popup.html"
   }
 }
