@@ -24,6 +24,14 @@
       "activeTab"
     ],
 
+    "web_accessible_resources": [
+      "main.css",
+      "img/arrow_up-48x48.png",
+      "img/arrow_default_up-48x48.png",
+      "img/arrow_default_down-48x48.png",
+      "img/arrow_down-48x48.png"
+    ],
+
     "content_scripts": [
       {
         "matches": ["*://www.youtube.com/watch?*"],
