@@ -32,17 +32,63 @@ function SecondsToString(ss) {
     return time.replace(/^(00\:){1,2}/gm, "");
 }
 
-// encodes the response as html
+// turns 1000 to 1k etc
+// !TODO support >1 million
+function readablizeNumber(number) {
+    var s = ['', 'k', 'M'];
+    var e = Math.floor(Math.log(number) / Math.log(1000));
+    return (number / Math.pow(1000, e)) + s[e];
+}
+
+// parses and adds the response to the dom
 function ResponseToHTML(response) {
-    var html = "<div id=\"your-time\">";
+    var stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = browser.extension.getURL("main.css");
+
+    var child = document.createElement("div");
+    child.id = "your-time";
+    // add stylesheet to the your-time div since i cant add to the head !TODO
+
     response.forEach(element => {
-        html += "<div class=\"submission\">";
-            html += "<h3 class=\"seconds\">" + SecondsToString(element["time"]) + "</h3>";
-            html += "<h3 class=\"comment\">" + element["comment"]               + "</h3>";
-            html += "<h3 class=\"votes\">"   + element["votes"]                 + "</h3>";
-        html += "</div>";
+        // great dom manipulation
+        var submission = document.createElement("div");
+        var votes = document.createElement("div");
+        var upvote = document.createElement("img");
+        var number = document.createElement("span");
+        var downvote = document.createElement("img");
+        var seconds = document.createElement("a");
+        var comment = document.createElement("span");
+
+        submission.className = "submission";
+        votes.className = "votes";
+        upvote.className = "upvote";
+        number.className = "number";
+        downvote.className = "downvote";
+        seconds.className = "seconds";
+        comment.className = "comment";
+
+        upvote.src = browser.extension.getURL("img/arrow_default_up-48x48.png");
+        downvote.src = browser.extension.getURL("img/arrow_default_down-48x48.png");
+
+        number.innerText = readablizeNumber(element["votes"]);
+        seconds.innerText = SecondsToString(parseInt(element["time"]));
+        seconds.href = "watch?v=" + element["video"] + "&t=" + element["time"] + "s";
+        comment.innerText = element["comment"];
+
+        votes.appendChild(upvote);
+        votes.appendChild(number);
+        votes.appendChild(downvote);
+
+        submission.appendChild(votes);
+        submission.appendChild(seconds);
+        submission.appendChild(comment);
+
+        child.appendChild(submission);
     });
-    html += "</div>";
+    console.log(child);
+    document.getElementById("info").appendChild(child);
+    document.getElementById("your-time").appendChild(stylesheet);
 }
 
 // gets id of youtube video from url
@@ -53,8 +99,11 @@ httpGetAsync(SELECT_URL + id, function(rp) {
     // if its not empty meaning there is data
     if (rp!="[]") {
         var response = JSON.parse(rp);
-        var html = ResponseToHTML(response);
-        console.log(html);
-        document.getElementById("info-contents").innerHTML += html;
+        // !TODO fix youtubes dynamic redirects
+        ResponseToHTML(response);
+    } else {
+
     }
 });
+
+// !TODO add event for youtube's non-refresh url changes using history.pushState
