@@ -5,11 +5,8 @@
     src: url('Lato-Regular.ttf'),
 }
 
-html {
-    font-family: Lato, sans-serif;
-}
-
 #your-time {
+    font-family: Lato, sans-serif;
     display: flex;
     overflow: hidden;
     margin-top: 5px;
