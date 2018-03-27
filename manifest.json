@@ -25,7 +25,8 @@
     ],
 
     "web_accessible_resources": [
-      "main.css",
+      "response.css",
+      "notfound.css",
       "img/arrow_up-48x48.png",
       "img/arrow_default_up-48x48.png",
       "img/arrow_default_down-48x48.png",
