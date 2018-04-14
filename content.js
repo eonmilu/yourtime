@@ -1,9 +1,9 @@
 const SELECT_URL = "https://oxygenrain.com/yourtime/search.php?";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert.php?";
-
-// youtube's dynamic redirect refer to the tech yt
-// uses not to load the page when clicking a timemark
-// on a comment or another video
+const STYLESHEET_URL = document.getElementsByTagName('meta')['stylesheet-internal-url'].getAttribute('content');
+var isLoadedFromURL = true;
+var firstUnstarted = false;
+// youtube's dynamic redirect refers to the tech yt uses to load the page when clicking a timemark on a comment or another video
 
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
@@ -55,15 +55,15 @@ function readablizeNumber(number) {
 }
 
 // parses and adds the response to the dom
-function ResponseToHTML(rp) {
+function ProccessResponse(rp) {
     var statusCode = rp.split("|")[0];
     switch (statusCode) {
         case "404":
-            OnNotFound();
+            NotFound();
             break;
         case "220": // response code 220 means the server has the data and was returned
             var response = JSON.parse(rp.substr(4));
-            AddParsedResponseToDOM(response);
+            ResponseToDOM(response);
             break;
         case "210": //response code 210 means a seeder has the data
             // !TODO add webrtc support to enable p2p
@@ -75,10 +75,10 @@ function ResponseToHTML(rp) {
     }
 }
 
-function AddParsedResponseToDOM(array) {
+function ResponseToDOM(array) {
     var stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = browser.extension.getURL("response.css");
+    stylesheet.href = STYLESHEET_URL;
 
     var child = document.createElement("div");
     child.id = "your-time";
@@ -86,7 +86,7 @@ function AddParsedResponseToDOM(array) {
     // add stylesheet to the your-time div since i cant seem to add to head !TODO
     document.getElementById("your-time").appendChild(stylesheet);
 
-    response.forEach(element => {
+    array.forEach(element => {
         // great dom manipulation
         var submission = document.createElement("div");
         var votes = document.createElement("div");
@@ -125,14 +125,14 @@ function AddParsedResponseToDOM(array) {
     });
 }
 
-function OnNotFound() {
+function NotFound() {
     var stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet";
-    stylesheet.href = browser.extension.getURL("notfound.css");
+    // TODO: add a meta tag containing the stylesheets' url
+    stylesheet.href = STYLESHEET_URL;
 
     var child = document.createElement("div");
     child.id = "your-time";
-    // add stylesheet to the your-time div since i cant seem to add to head !TODO
     child.appendChild(stylesheet);
 
     var error = document.createElement("div");
@@ -152,27 +152,60 @@ function OnNotFound() {
     error.appendChild(secondaryText);
 
     child.appendChild(error);
-    document.getElementById("info").appendChild(child);
+
+    var intervalId;
+    intervalId = setInterval(function () {
+        // false if it has not loaded.
+        if (document.getElementById("info-contents")) {
+            console.log("Page loaded.");
+            document.getElementById("info-contents").appendChild(child);
+            console.log("Child appended.");
+            clearInterval(intervalId);
+        }
+    }, 100);
 }
 
-// resets everything to cope with youtube's dynamic link directing
-function Reset() {
-    document.getElementById("info").removeChild(document.getElementById("your-time"));
+var player = document.getElementById("movie_player");
+player.addEventListener("onStateChange", function (statusInteger) {
+    // https://developers.google.com/youtube/iframe_api_reference#Events
+    if (statusInteger == -1) {
+        // We have to ignore
+        if (firstUnstarted) {
+            firstUnstarted = false;
+            console.log(statusInteger + "=======================");
+            isLoadedFromURL = false;
+            RemoveOnError();
+            main();
+        } else {
+            console.log("Received first -1");
+            firstUnstarted = true;
+        }
+    } else if (statusInteger == 1 && isLoadedFromURL) {
+        console.log(statusInteger + "+++++++++++++++++++++++");
+        // loading a video from a direct url will not give a status code of 5 but a 1.
+        // We use a temporary bool to check if it is the first time it has happened.
+        isLoadedFromURL = false;
+        RemoveOnError();
+        main();
+    } else {
+        console.log(statusInteger);
+    }
+});
+
+function RemoveOnError() {
+    while (document.getElementById("your-time")) {
+        document.getElementById("info-contents").removeChild(document.getElementById("your-time"));
+    }
 }
 
 function AddTimemarkCreation() {
-    document.getElementById("your-time").innerHTML = "heck you";
+    alert("TODO:");
 }
-main();
 
-// gets id of youtube video from url
-// regex ignores "v=" to reuse on GET method
 function main() {
+    // gets id of youtube video from url
     var id = window.location.href.match(/v=[^&]*/);
-
     httpGetAsync(SELECT_URL + id, function (rp) {
-        ResponseToHTML(rp);
+        ProccessResponse(rp);
     });
 }
-// !TODO add event for youtube's non-refresh url changes using history.onpushState
-// !TODO add support for youtube's dynamic link redirecting
