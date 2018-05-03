@@ -1,8 +1,7 @@
 const SELECT_URL = "https://oxygenrain.com/yourtime/search.php?";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert.php?";
 const STYLESHEET_URL = document.getElementsByTagName('meta')['stylesheet-internal-url'].getAttribute('content');
-var isLoadedFromURL = true;
-var firstUnstarted = false;
+var isLoaded = false;
 // youtube's dynamic redirect refers to the tech yt uses to load the page when clicking a timemark on a comment or another video
 
 function httpGetAsync(theUrl, callback) {
@@ -165,30 +164,34 @@ function NotFound() {
     }, 100);
 }
 
+// Overriding YouTube's saveAndPush function to add a event firer
+var originalSaveAndPush = saveAndPush();
+
+saveAndPush = function(arguments) {
+    console.log("YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+    return originalSaveAndPush(arguments);
+}
+
 var player = document.getElementById("movie_player");
 player.addEventListener("onStateChange", function (statusInteger) {
     // https://developers.google.com/youtube/iframe_api_reference#Events
-    if (statusInteger == -1) {
-        // We have to ignore
-        if (firstUnstarted) {
-            firstUnstarted = false;
-            console.log(statusInteger + "=======================");
-            isLoadedFromURL = false;
+    console.log(statusInteger);
+    switch (statusInteger) {
+        case 1:
+            if (!isLoaded) {
+                console.log(statusInteger + " LOADING");
+                RemoveOnError();
+                main();
+                isLoaded = true;
+                console.log("LOADED");
+            }
+            break;
+        case 5:
             RemoveOnError();
             main();
-        } else {
-            console.log("Received first -1");
-            firstUnstarted = true;
-        }
-    } else if (statusInteger == 1 && isLoadedFromURL) {
-        console.log(statusInteger + "+++++++++++++++++++++++");
-        // loading a video from a direct url will not give a status code of 5 but a 1.
-        // We use a temporary bool to check if it is the first time it has happened.
-        isLoadedFromURL = false;
-        RemoveOnError();
-        main();
-    } else {
-        console.log(statusInteger);
+            isLoaded = true;
+            console.log("LOADED");
+            break;
     }
 });
 

@@ -12,3 +12,4 @@ meta.name = "stylesheet-internal-url";
 meta.content = browser.extension.getURL("stylesheet.css");
 (document.head || document.documentElement).appendChild(s);
 (document.head || document.documentElement).appendChild(meta);
+2
