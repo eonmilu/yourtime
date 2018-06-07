@@ -1,6 +1,6 @@
 var s = document.createElement("script");
 s.src = browser.extension.getURL("content.js");
-s.onload = function() {
+s.onload = function () {
     this.remove();
 };
 
@@ -10,6 +10,16 @@ var meta = document.createElement('meta');
 meta.name = "stylesheet-internal-url";
 // TODO: unify the stylesheet
 meta.content = browser.extension.getURL("stylesheet.css");
-(document.head || document.documentElement).appendChild(s);
+
 (document.head || document.documentElement).appendChild(meta);
-2
+(document.head || document.documentElement).appendChild(s);
+/*
+var intervalId;
+intervalId = setInterval(function () {
+    // false if it has not loaded.
+    if (document.getElementById("info-contents")) {
+        console.log("Found target div. Adding script...");
+        clearInterval(intervalId);
+    }
+}, 100);
+*/
