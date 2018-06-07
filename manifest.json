@@ -36,7 +36,7 @@
   ],
 
   "content_scripts": [{
-    "matches": ["*://www.youtube.com/watch?*"],
+    "matches": ["*://www.youtube.com/*"],
     "run_at": "document_idle",
     "js": ["scriptloader.js"]
   }],
