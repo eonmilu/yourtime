@@ -2,6 +2,7 @@ const SELECT_URL = "https://oxygenrain.com/yourtime/search.php?";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert.php?";
 const STYLESHEET_URL = document.getElementsByTagName('meta')['stylesheet-internal-url'].getAttribute('content');
 var lastId = "";
+var loadedFromUrl = true;
 
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
@@ -56,9 +57,9 @@ function addMainStructure() {
     stylesheet.rel = "stylesheet", stylesheet.href = STYLESHEET_URL;
 
     var mainStructure = document.createElement("div");
+    mainStructure.appendChild(stylesheet);
     mainStructure.id = "your-time";
 
-    mainStructure.appendChild(stylesheet);
     document.getElementById("info-contents").appendChild(mainStructure);
 }
 
@@ -143,7 +144,10 @@ function addTimemark() {
 
 // Get ID of YouTube video from URL
 var id = window.location.href.match(/v=[^&]*/)[0];
-lastId = id;
+// Loading the page from typing an URL will make lastId == id even when it has not been loaded
+// loadedFromUrl will prevent this by making lastId an empty string
+lastId = loadedFromUrl ? "" : id;
+console.log(lastId);
 
 var player = document.getElementById("movie_player");
 player.addEventListener("onStateChange", function (statusInteger) {
@@ -154,6 +158,7 @@ player.addEventListener("onStateChange", function (statusInteger) {
     id = window.location.href.match(/v=[^&]*/)[0];
     switch (statusInteger) {
         case 1:
+            loadedFromUrl = false;
             if (lastId != id) {
                 lastId = id;
                 removeMainStructure();
