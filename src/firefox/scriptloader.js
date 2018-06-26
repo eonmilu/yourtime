@@ -1,16 +1,19 @@
 var s = document.createElement("script");
 s.src = browser.extension.getURL("content.js");
 
-// This meta element contains the stylesheets' internal url so that the injected script
-// can access it since it cannot use the browser's APIs
+var metaSources = {
+    stylesheet: browser.extension.getURL("stylesheet.css"),
+}
+
+// This meta element contains the stylesheet, upvote and downvote images' internal url
+// so that the injected script can access them since it cannot use the browser's APIs
 var meta = document.createElement('meta');
-meta.name = "stylesheet-internal-url";
-// TODO: unify the stylesheet
-meta.content = browser.extension.getURL("stylesheet.css");
+meta.name = "your-time-meta";
+meta.content = JSON.stringify(metaSources);
 
 var intervalId;
 intervalId = setInterval(function () {
-    console.log("Searching for target div..");
+    console.log("Searching for target div...");
 
     // false if it has not loaded.
     if (document.getElementById("info-contents")) {
