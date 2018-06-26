@@ -2,7 +2,6 @@ const SELECT_URL = "https://oxygenrain.com/yourtime/search.php?";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert.php?";
 const META = JSON.parse(document.getElementsByTagName('meta')['your-time-meta'].getAttribute('content'));
 var lastId = "";
-var loadedFromUrl = true;
 
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
@@ -153,9 +152,7 @@ function addTimemark() {
 
 // Get ID of YouTube video from URL
 var id = window.location.href.match(/v=[^&]*/)[0];
-// Loading the page from typing an URL will make lastId == id even when it has not been loaded
-// loadedFromUrl will prevent this by making lastId an empty string
-lastId = loadedFromUrl ? "" : id;
+lastId = "";
 console.log(lastId);
 
 var player = document.getElementById("movie_player");
@@ -167,7 +164,6 @@ player.addEventListener("onStateChange", function (statusInteger) {
     id = window.location.href.match(/v=[^&]*/)[0];
     switch (statusInteger) {
         case 1:
-            loadedFromUrl = false;
             if (lastId != id) {
                 lastId = id;
                 removeMainStructure();
@@ -177,6 +173,7 @@ player.addEventListener("onStateChange", function (statusInteger) {
     }
 });
 
+// TEMP: Make sure the pause/play event is fired
 player.pauseVideo();
 player.playVideo();
 
