@@ -1,6 +1,6 @@
 const SELECT_URL = "https://oxygenrain.com/yourtime/search.php?";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert.php?";
-const STYLESHEET_URL = document.getElementsByTagName('meta')['stylesheet-internal-url'].getAttribute('content');
+const META = JSON.parse(document.getElementsByTagName('meta')['your-time-meta'].getAttribute('content'));
 var lastId = "";
 var loadedFromUrl = true;
 
@@ -15,7 +15,7 @@ function httpGetAsync(theUrl, callback) {
     xmlHttp.send(null);
 }
 
-// Transform seconds to (days):(hours):minutes:seconds
+// Transform seconds to ((days):(hours):)minutes:seconds
 function secondsToString(ss) {
     // Ignore negative seconds
     if (ss < 0) return Global.NaN;
@@ -54,7 +54,7 @@ function readablizeNumber(number) {
 // Add main skeleton, where the children will be added
 function addMainStructure() {
     var stylesheet = document.createElement("link");
-    stylesheet.rel = "stylesheet", stylesheet.href = STYLESHEET_URL;
+    stylesheet.rel = "stylesheet", stylesheet.href = META.stylesheet;
 
     var mainStructure = document.createElement("div");
     mainStructure.appendChild(stylesheet);
@@ -65,29 +65,38 @@ function addMainStructure() {
 
 function appendChildToMainStructure(mainStructure, childData) {
     var submission = document.createElement("div");
-    var votes = document.createElement("div");
-    var upvote = document.createElement("img");
-    var number = document.createElement("span");
-    var downvote = document.createElement("img");
-    var seconds = document.createElement("a");
-    var comment = document.createElement("span");
+    var votes      = document.createElement("div");
+    var upvote     = document.createElement("svg");
+    var number     = document.createElement("span");
+    var downvote   = document.createElement("svg");
+    var seconds    = document.createElement("a");
+    var comment    = document.createElement("span");
+    var triangle   = document.createElement("polygon");
 
     submission.className = "submission";
-    votes.className = "votes";
-    upvote.className = "upvote";
-    number.className = "number";
-    downvote.className = "downvote";
-    seconds.className = "seconds";
-    comment.className = "comment";
+    votes.className      = "votes";
+    upvote.className     = "upvote";
+    number.className     = "number";
+    downvote.className   = "downvote";
+    seconds.className    = "seconds";
+    comment.className    = "comment";
 
-    upvote.src = browser.extension.getURL("img/arrow_default_up-48x48.png");
-    downvote.src = browser.extension.getURL("img/arrow_default_down-48x48.png");
+    triangle.points = "14,0 7,14 0,0";
+    triangle.style = "fill:gray;";
 
-    number.innerText = readablizeNumber(element["votes"]);
-    seconds.innerText = secondsToString(parseInt(element["time"]));
-    seconds.href = "/watch?v=" + element["video"] + "&t=" + element["time"] + "s";
+    upvote.height = "50%", upvote.width = "14";
+    upvote.appendChild(triangle);
+
+    downvote.height = "50%", downvote.width = "14";
+    upvote.appendChild(triangle);
+
+    number.innerText = readablizeNumber(childData["votes"]);
+    seconds.innerText = secondsToString(parseInt(childData["time"]));
+    seconds.addEventListener('click', function(){
+        player.seekTo(childData["time"]);
+    });
     seconds.rel = "nofollow";
-    comment.innerText = element["comment"];
+    comment.innerText = childData["comment"];
 
     votes.appendChild(upvote);
     votes.appendChild(number);
@@ -113,15 +122,15 @@ function processResponse(rp, statusCode) {
             break;
         case "404":
         default:
-            var error = document.createElement("div"),
-                mainText = document.createElement("span"),
+            var error         = document.createElement("div"),
+                mainText      = document.createElement("span"),
                 secondaryText = document.createElement("a");
 
-            error.id = "error";
-            mainText.className = "main-text";
-            mainText.innerText = "Your Time didn't find any timemarks for this video. ";
+            error.id                = "error";
+            mainText.className      = "main-text";
+            mainText.innerText      = "Your Time didn't find any timemarks for this video. ";
             secondaryText.className = "secondary-text";
-            secondaryText.onclick = addTimemark;
+            secondaryText.onclick   = addTimemark;
             secondaryText.innerText = "Submit your own.";
 
             error.appendChild(mainText);
@@ -167,6 +176,9 @@ player.addEventListener("onStateChange", function (statusInteger) {
             break;
     }
 });
+
+player.pauseVideo();
+player.playVideo();
 
 function main() {
     httpGetAsync(SELECT_URL + id, function (rp) {
