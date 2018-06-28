@@ -64,24 +64,21 @@ function addMainStructure() {
 
 function appendChildToMainStructure(mainStructure, childData) {
     var submission = document.createElement("div");
-    var votes      = document.createElement("div");
-    var upvote     = document.createElement("svg");
-    var number     = document.createElement("span");
-    var downvote   = document.createElement("svg");
-    var seconds    = document.createElement("a");
-    var comment    = document.createElement("span");
-    var triangle   = document.createElement("polygon");
+    var votes = document.createElement("div");
+    var upvote = document.createElement("svg");
+    var number = document.createElement("span");
+    var downvote = document.createElement("svg");
+    var seconds = document.createElement("a");
+    var comment = document.createElement("span");
+    var triangle = document.createElement("polygon");
 
     submission.className = "submission";
-    votes.className      = "votes";
-    upvote.className     = "upvote";
-    number.className     = "number";
-    downvote.className   = "downvote";
-    seconds.className    = "seconds";
-    comment.className    = "comment";
-
-    triangle.points = "14,0 7,14 0,0";
-    triangle.style = "fill:gray;";
+    votes.className = "votes";
+    upvote.className = "upvote";
+    number.className = "number";
+    downvote.className = "downvote";
+    seconds.className = "seconds";
+    comment.className = "comment";
 
     upvote.height = "50%", upvote.width = "14";
     upvote.appendChild(triangle);
@@ -91,7 +88,7 @@ function appendChildToMainStructure(mainStructure, childData) {
 
     number.innerText = readablizeNumber(childData["votes"]);
     seconds.innerText = secondsToString(parseInt(childData["time"]));
-    seconds.addEventListener('click', function(){
+    seconds.addEventListener('click', function () {
         player.seekTo(childData["time"]);
     });
     seconds.rel = "nofollow";
@@ -121,15 +118,15 @@ function processResponse(rp, statusCode) {
             break;
         case "404":
         default:
-            var error         = document.createElement("div"),
-                mainText      = document.createElement("span"),
+            var error = document.createElement("div"),
+                mainText = document.createElement("span"),
                 secondaryText = document.createElement("a");
 
-            error.id                = "error";
-            mainText.className      = "main-text";
-            mainText.innerText      = "Your Time didn't find any timemarks for this video. ";
+            error.id = "error";
+            mainText.className = "main-text";
+            mainText.innerText = "Your Time didn't find any timemarks for this video. ";
             secondaryText.className = "secondary-text";
-            secondaryText.onclick   = addTimemark;
+            secondaryText.onclick = addTimemark;
             secondaryText.innerText = "Submit your own.";
 
             error.appendChild(mainText);
@@ -143,6 +140,9 @@ function processResponse(rp, statusCode) {
 function removeMainStructure() {
     while (document.getElementById("your-time")) {
         document.getElementById("info-contents").removeChild(document.getElementById("your-time"));
+    }
+    while (document.getElementById("your-time-loader")) {
+        document.getElementById("info-contents").removeChild(document.getElementById("your-time-loader"));
     }
 }
 
@@ -173,7 +173,7 @@ player.addEventListener("onStateChange", function (statusInteger) {
     }
 });
 
-// TEMP: Make sure the pause/play event is fired
+// FIXME: Make sure the pause/play event is fired
 player.pauseVideo();
 player.playVideo();
 

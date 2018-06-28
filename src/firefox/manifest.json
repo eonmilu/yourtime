@@ -26,7 +26,8 @@
 
   "web_accessible_resources": [
     "stylesheet.css",
-    "content.js"
+    "content.js",
+    "loader.svg"
   ],
 
   "content_scripts": [{
