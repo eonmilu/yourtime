@@ -52,9 +52,11 @@ function readablizeNumber(number) {
 
 // Add main skeleton, where the children will be added
 function addMainStructure() {
+    // CSS
     var stylesheet = document.createElement("link");
     stylesheet.rel = "stylesheet", stylesheet.href = META.stylesheet;
 
+    // Main div
     var mainStructure = document.createElement("div");
     mainStructure.appendChild(stylesheet);
     mainStructure.id = "your-time";
@@ -122,7 +124,7 @@ function processResponse(rp, statusCode) {
                 mainText = document.createElement("span"),
                 secondaryText = document.createElement("a");
 
-            error.id = "error";
+            error.id = "your-time-error";
             mainText.className = "main-text";
             mainText.innerText = "Your Time didn't find any timemarks for this video. ";
             secondaryText.className = "secondary-text";
@@ -173,7 +175,7 @@ player.addEventListener("onStateChange", function (statusInteger) {
     }
 });
 
-// FIXME: Make sure the pause/play event is fired
+// TODO:HACK: Make sure the pause/play event is fired
 player.pauseVideo();
 player.playVideo();
 
