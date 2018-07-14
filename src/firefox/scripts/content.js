@@ -111,32 +111,60 @@ function appendChildToMainStructure(mainStructure, childData) {
 function processResponse(rp, statusCode) {
     var mainStructure = document.getElementById("your-time");
 
-    switch (statusCode) {
-        case "220": // 220 for data returned
-            var response = JSON.parse(rp);
-            response.forEach(element => {
-                appendChildToMainStructure(mainStructure, element);
-            });
-            break;
-        case "404":
-        default:
-            var error = document.createElement("div"),
-                mainText = document.createElement("span"),
-                secondaryText = document.createElement("a");
+    /* STATUS CODES
+    200: Found
+    210: Not found
+    220: Internal error
+    */
 
-            error.id = "your-time-error";
-            mainText.className = "main-text";
-            mainText.innerText = "Your Time didn't find any timemarks for this video. ";
-            secondaryText.className = "secondary-text";
-            secondaryText.onclick = addTimemark;
-            secondaryText.innerText = "Submit your own.";
-
-            error.appendChild(mainText);
-            error.appendChild(secondaryText);
-            mainStructure.appendChild(error);
-
-            document.getElementById("info-contents").appendChild(mainStructure);
+    if (statusCode == "200") {
+        var response = JSON.parse(rp);
+        response.forEach(element => {
+            appendChildToMainStructure(mainStructure, element);
+        });
+    } else {
+        addError(statusCode);
     }
+}
+
+function addError(statusCode) {
+    switch (statusCode) {
+        case "210":
+            mainTextMsg = "Your Time didn't find any timemarks for this video. "
+            secTextMsg = "Submit your own. "
+            secTextOnclick = addTimemark;
+            break;
+        case "220":
+            mainTextMsg = "Internal error. "
+            secTextMsg = "Try again later."
+            secTextOnclick = null;
+            break;
+        default:
+            mainTextMsg = "Unknown error code"
+            secTextMsg = "Are you using the latest Your Time version?"
+            secTextOnclick = function() {
+                var win = window.open('https://addons.mozilla.org/your-time', '_blank');
+                win.focus();
+            };
+            break;
+    }
+
+    var error = document.createElement("div"),
+        mainText = document.createElement("span"),
+        secondaryText = document.createElement("a");
+
+    error.id = "your-time-error";
+    mainText.className = "main-text";
+    mainText.innerText = mainTextMsg;
+    secondaryText.className = "secondary-text";
+    secondaryText.onclick = secTextOnclick;
+    secondaryText.innerText = secTextMsg;
+
+    error.appendChild(mainText);
+    error.appendChild(secondaryText);
+    mainStructure.appendChild(error);
+
+    document.getElementById("info-contents").appendChild(mainStructure);
 }
 
 function removeMainStructure() {
