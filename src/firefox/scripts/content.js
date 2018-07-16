@@ -143,7 +143,7 @@ function addError(statusCode) {
             mainTextMsg = "Unknown error code"
             secTextMsg = "Are you using the latest Your Time version?"
             secTextOnclick = function() {
-                var win = window.open('https://addons.mozilla.org/your-time', '_blank');
+                var win = window.open('https://addons.mozilla.org/en-US/firefox/addon/your-time/', '_blank');
                 win.focus();
             };
             break;
