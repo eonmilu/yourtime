@@ -3,6 +3,7 @@ const INSERT_URL = "https://oxygenrain.com/yourtime/insert.php?";
 const META = JSON.parse(document.getElementsByTagName('meta')['your-time-meta'].getAttribute('content'));
 var lastId = "";
 
+// TODO: add timeout
 function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange =
@@ -134,6 +135,7 @@ function addError(statusCode) {
             secTextMsg = "Submit your own. "
             secTextOnclick = addTimemark;
             break;
+        case "":
         case "220":
             mainTextMsg = "Internal error. "
             secTextMsg = "Try again later."
