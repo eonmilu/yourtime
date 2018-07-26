@@ -12,7 +12,7 @@
   },
 
   "description": " A web extension that shows important, community-submitted timemarks on YouTube videos.",
-  "homepage_url": "https://gitlab.com/eonmilu/your-time",
+  "homepage_url": "https://github.com/eonmilu/yourtime",
   "icons": {
     "48": "resources/logo.svg",
     "96": "resources/logo.svg"
@@ -32,7 +32,7 @@
   "content_scripts": [{
     "matches": ["*://www.youtube.com/*"],
     "run_at": "document_idle",
-    "js": ["scripts/scriptloader.js"]
+    "js": ["scripts/jquery.min.js", "scripts/scriptloader.js"]
   }],
 
   "browser_action": {

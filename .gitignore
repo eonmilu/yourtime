@@ -1,2 +1,4 @@
-.gitignore
 .vscode/
+node_modules/
+src/firefox/.sass-cache
+build/
