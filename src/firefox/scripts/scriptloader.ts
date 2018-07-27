@@ -6,9 +6,10 @@ var metaSources = {
     loader: browser.extension.getURL("../resources/loader.svg")
 }
 
-let jquery = $("<script/>", {src: browser.extension.getURL("scripts/jquery.min.js")});
-let script = $("<script/>", {src: browser.extension.getURL("scripts/content.js")});
+// Load jQuery as soon as possible
+$("<script/>", { src: browser.extension.getURL("scripts/jquery.min.js") }).appendTo("head");
 
+let script = $("<script/>", { src: browser.extension.getURL("scripts/content.js") });
 let loader = $("<img/>", {
     src: browser.extension.getURL("../resources/loader.svg"),
     alt: "Loading...",
@@ -32,7 +33,7 @@ intervalId = setInterval(() => {
         console.log("Found target div. Adding script...");
 
         $("#info-contents").append(loader);
-        $("head").append(jquery, meta, script);
+        $("head").append(meta, script);
         clearInterval(intervalId);
     }
 }, 10);
