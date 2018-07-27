@@ -70,7 +70,7 @@
         number.innerText = readablizeNumber(childData["votes"]);
         seconds.innerText = secondsToString(parseInt(childData["time"]));
         seconds.addEventListener('click', function () {
-            // HACK: bypass TS' function check
+            // HACK: bypass TS' type check
             player["seekTo"](childData["time"]);
         });
         seconds.rel = "nofollow";
@@ -189,14 +189,17 @@
             data: { v: id },
             timeout: DEFAULT_TIMEOUT,
             success: rp => {
-                let statusCode = rp.split("|")[0];
-                let response = rp.substr(4);
+                // Response's first 3 characters will be the status code
+                let statusCode = rp.substr(0, 3);
+                // Anything else is considered JSON
+                let response = rp.substr(3);
 
                 addMainStructure();
                 processResponse(response, statusCode);
             },
             error: (jqXHR, status, error) => {
                 addError("220");
+                console.log(jqXHR, status, error);
             }
         })
     }
