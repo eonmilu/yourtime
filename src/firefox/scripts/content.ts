@@ -177,29 +177,21 @@ intervalId = setInterval(() => {
         });
 
         // HACK: Make sure the pause/play event is fired
-        console.log(player);
         player.pauseVideo();
         player.playVideo();
 
         function main() {
-            $.ajax({
-                url: SELECT_URL,
-                dataType: "json",
-                data: { v: id },
-                timeout: DEFAULT_TIMEOUT,
-                success: rp => {
-                    // Response's first 3 characters will be the status code
-                    let statusCode = rp.substr(0, 3);
-                    // Anything else is considered JSON
-                    let response = rp.substr(3);
+            $.get(SELECT_URL, { v: id }).done(rp => {
+                // Response's first 3 characters will be the status code
+                let statusCode = rp.substr(0, 3);
+                // Anything else is considered JSON
+                let response = rp.substr(3);
 
-                    addMainStructure();
-                    processResponse(response, statusCode);
-                },
-                error: (jqXHR, status, error) => {
-                    addError("220");
-                    console.log(jqXHR, status, error);
-                }
+                addMainStructure();
+                processResponse(response, statusCode);
+            }).fail(err => {
+                addError("220");
+                console.log(err);
             })
         };
     }
