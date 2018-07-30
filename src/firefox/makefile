@@ -18,7 +18,7 @@ yourtime: scripts/* ../common/resources/* ../common/*
 	# Copy Firebase UI JavaScript
 	cp -f ../node_modules/firebaseui/dist/firebaseui.js ../../build/firefox/scripts/firebaseui.js
 	# Copy Firebase UI CSS
-	cp -f ../node_modules/firebaseui/dist/firebaseui.css ../../build/firefox/scripts/firebaseui.css
+	cp -f ../node_modules/firebaseui/dist/firebaseui.css ../../build/firefox/resources/firebaseui.css
 	# Compile TS files using tsconfig.json
 	tsc
 	# Clean up
