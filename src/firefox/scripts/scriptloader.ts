@@ -3,7 +3,6 @@ declare var firebase, firebaseui, handleUIError: any;
 // This meta element contains the stylesheet, upvote and downvote images' internal url
 // so that the injected script can access them since it cannot use the browser's APIs
 var metaSources = {
-    stylesheet: browser.extension.getURL("../resources/stylesheet.css"),
     loader: browser.extension.getURL("../resources/loader.svg")
 }
 
