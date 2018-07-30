@@ -19,19 +19,23 @@
   },
 
   "permissions": [
-    "*://www.youtube.com/watch?*",
-    "https://oxygenrain.com/yourtime/*",
-    "activeTab"
+    "https://www.youtube.com/",
+    "https://oxygenrain.com/yourtime/",
+    "activeTab",
+    "cookies"
   ],
 
   "web_accessible_resources": [
     "scripts/content.js",
     "scripts/jquery.min.js",
-    "resources/*"
+    "resources/*",
+    "LICENSE",
+    "PRIVACY",
+    "TOS"
   ],
 
   "content_scripts": [{
-    "matches": ["*://www.youtube.com/*"],
+    "matches": ["https://www.youtube.com/*"],
     "run_at": "document_idle",
     "js": ["scripts/jquery.min.js", "scripts/scriptloader.js"]
   }],

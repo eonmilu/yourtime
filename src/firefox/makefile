@@ -1,4 +1,4 @@
-yourtime: scripts/* ../common/resources/stylesheet.scss ../common/*
+yourtime: scripts/* ../common/resources/* ../common/*
 	# Create build directory if it does not exist
 	mkdir -p ../../build
 	# Delete the previous Firefox build if it exists
@@ -15,5 +15,11 @@ yourtime: scripts/* ../common/resources/stylesheet.scss ../common/*
 	cp ../node_modules/jquery/dist/jquery.min.js ../../build/firefox/scripts/
 	# Compile SCSS to the resource folder in the build directory
 	sass -Cf ../common/resources/stylesheet.scss ../../build/firefox/resources/stylesheet.css
+	# Copy Firebase UI JavaScript
+	cp -f ../node_modules/firebaseui/dist/firebaseui.js ../../build/firefox/scripts/firebaseui.js
+	# Copy Firebase UI CSS
+	cp -f ../node_modules/firebaseui/dist/firebaseui.css ../../build/firefox/scripts/firebaseui.css
 	# Compile TS files using tsconfig.json
 	tsc
+	# Clean up
+	rm -rf ../../build/firefox/resources/stylesheet.css.map ../../build/firefox/resources/stylesheet.scss ../../build/firefox/package-lock.json ../../build/firefox/package.json
