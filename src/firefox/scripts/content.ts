@@ -194,7 +194,7 @@ intervalId = setInterval(() => {
             $.ajax({
                 method: "GET",
                 url: SELECT_URL,
-                dataType: "json",
+                dataType: "text",
                 data: { v: id },
                 timeout: DEFAULT_TIMEOUT
             }).done(rp => {
