@@ -28,6 +28,7 @@
   "web_accessible_resources": [
     "scripts/content.js",
     "scripts/jquery.min.js",
+    "scripts/firebase.js",
     "resources/*",
     "LEGAL/*"
   ],
