@@ -191,7 +191,13 @@ intervalId = setInterval(() => {
         player.playVideo();
 
         function main() {
-            $.get(SELECT_URL, { v: id }).done(rp => {
+            $.ajax({
+                method: "GET",
+                url: SELECT_URL,
+                dataType: "json",
+                data: { v: id },
+                timeout: DEFAULT_TIMEOUT
+            }).done(rp => {
                 // Response's first 3 characters will be the status code
                 let statusCode = rp.substr(0, 3);
                 // Anything else is considered JSON
@@ -199,9 +205,11 @@ intervalId = setInterval(() => {
 
                 addMainStructure();
                 processResponse(response, statusCode);
-            }).fail(err => {
+            }).fail((jqXHR, textStatus, error) => {
                 addError("220");
-                console.log(err);
+                console.log(error);
+                console.log(jqXHR);
+                console.log(textStatus);
             })
         };
     }
