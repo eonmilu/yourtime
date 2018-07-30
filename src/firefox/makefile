@@ -1,4 +1,4 @@
-yourtime: scripts/* ../common/resources/* ../common/*
+yourtime: scripts/* ../common/resources/* ../common/* ../node_modules/*
 	# Create build directory if it does not exist
 	mkdir -p ../../build
 	# Delete the previous Firefox build if it exists
@@ -21,5 +21,10 @@ yourtime: scripts/* ../common/resources/* ../common/*
 	cp -f ../node_modules/firebaseui/dist/firebaseui.css ../../build/firefox/resources/firebaseui.css
 	# Compile TS files using tsconfig.json
 	tsc
+	# Copy third party licenses
+	cp ../node_modules/dialog-polyfill/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/dialog-polyfill
+	cp ../node_modules/firebaseui/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/firebaseui
+	cp ../node_modules/jquery/LICENSE.txt ../../build/firefox/LEGAL/THIRD_PARTIES/jquery
+	cp ../node_modules/@types/jquery/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/tsjquery
 	# Clean up
 	rm -rf ../../build/firefox/resources/stylesheet.css.map ../../build/firefox/resources/stylesheet.scss ../../build/firefox/package-lock.json ../../build/firefox/package.json
