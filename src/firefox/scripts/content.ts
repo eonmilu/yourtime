@@ -55,12 +55,7 @@ intervalId = setInterval(() => {
 
         // Add main skeleton, where the children will be added
         function addMainStructure(): void {
-            $("<link/>", { // Stylesheet
-                rel: "stylesheet",
-                href: META.stylesheet
-            }).appendTo(
-                $("<div/>", { id: "your-time" }) // Main div
-            ).appendTo("#info-contents");
+            $("<div/>", { id: "your-time" }).appendTo("#info-contents"); // Main div
         }
 
         function appendChildToMainStructure(childData: any): void {

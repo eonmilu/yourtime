@@ -9,8 +9,13 @@ var metaSources = {
 
 // Load jQuery as soon as possible
 $("<script/>", { src: browser.extension.getURL("scripts/jquery.min.js") }).appendTo("head");
+// Load stylesheet
+$("<link/>", {
+    src: browser.extension.getURL("../resources/stylesheet.css"),
+    rel: "stylesheet"
+}).appendTo("head");
 
-// Load uiConfig from FirebaseUI
+// uiConfig to feed to FirebaseUI
 let uiConfig = {
     // Whether to upgrade anonymous users should be explicitly provided.
     autoUpgradeAnonymousUsers: true,
@@ -91,6 +96,7 @@ let meta = $("<meta/>", {
     name: "your-time-meta",
     content: JSON.stringify(metaSources)
 });
+
 
 // Check every 10 ms if the div has been loaded
 var intervalId;
