@@ -1,5 +1,4 @@
 declare var browser: any;
-declare var firebase, firebaseui, handleUIError: any;
 // This meta element contains the stylesheet, upvote and downvote images' internal url
 // so that the injected script can access them since it cannot use the browser's APIs
 var metaSources = {
@@ -15,6 +14,7 @@ $("<link/>", {
 }).appendTo("head");
 
 // uiConfig to feed to FirebaseUI
+/*
 let uiConfig = {
     // Whether to upgrade anonymous users should be explicitly provided.
     autoUpgradeAnonymousUsers: true,
@@ -80,8 +80,7 @@ let fb = $("<div/>", { id: "#firebase-auth-container" });
 var ui = new firebaseui.auth.AuthUI(firebase.auth());
 // The start method will wait until the DOM is loaded.
 ui.start('#firebaseui-auth-container', uiConfig);
-
-
+*/
 let script = $("<script/>", { src: browser.extension.getURL("scripts/content.js") });
 let loader = $("<img/>", {
     src: browser.extension.getURL("../resources/loader.svg"),

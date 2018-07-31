@@ -36,7 +36,7 @@
   "content_scripts": [{
     "matches": ["https://www.youtube.com/*"],
     "run_at": "document_idle",
-    "js": ["scripts/jquery.min.js", "scripts/scriptloader.js"]
+    "js": ["scripts/firebaseui.js", "scripts/jquery.min.js", "scripts/scriptloader.js"]
   }],
 
   "browser_action": {
