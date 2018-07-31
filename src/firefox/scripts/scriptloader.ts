@@ -1,6 +1,5 @@
 declare var browser: any;
-// This meta element contains the stylesheet, upvote and downvote images' internal url
-// so that the injected script can access them since it cannot use the browser's APIs
+// This meta element contains any internal url the injected script can't access withour the browser's APIs
 var metaSources = {
     loader: browser.extension.getURL("../resources/loader.svg")
 }
