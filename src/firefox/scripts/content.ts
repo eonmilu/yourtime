@@ -1,4 +1,4 @@
-var firebaseUser;
+/*var firebaseUser;
 browser.cookies.get({
     firsyPartyDomain: "oxygenrain.com",
     name: "your-time-login",
@@ -11,7 +11,7 @@ browser.cookies.get({
     } else {
         firebaseUser = JSON.parse(c.value);
     }
-})
+})*/
 
 // Check every 10 ms if jQuery has been loaded
 var intervalId;
