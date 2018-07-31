@@ -43,7 +43,7 @@
     "browser_style": false,
     "default_icon": {
       "16": "resources/logo.svg",
-      "32": "img/logo-32x32.png"
+      "32": "resources/logo.svg"
     },
     "default_title": "Your Time",
     "default_popup": "popup/popup.html"
