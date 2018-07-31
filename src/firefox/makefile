@@ -16,4 +16,4 @@ yourtime: scripts/* ../common/resources/* ../common/* ../node_modules/*
 	# Copy third party licenses
 	cp ../node_modules/@types/jquery/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/tsjquery
 	# Clean up
-	rm -rf ../../build/firefox/resources/stylesheet.css.map ../../build/firefox/resources/stylesheet.scss ../../build/firefox/package-lock.json ../../build/firefox/package.json
+	rm -rf ../../build/firefox/resources/stylesheet.css.map ../../build/firefox/resources/stylesheet.scss
