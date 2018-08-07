@@ -191,6 +191,7 @@ intervalId = setInterval(() => {
         player.playVideo();
 
         function main() {
+            addMainStructure();
             $.ajax({
                 method: "GET",
                 url: SELECT_URL,
@@ -203,7 +204,6 @@ intervalId = setInterval(() => {
                 // Anything else is considered JSON
                 let response = rp.substr(3);
 
-                addMainStructure();
                 processResponse(response, statusCode);
             }).fail((jqXHR, textStatus, error) => {
                 addError("220");
