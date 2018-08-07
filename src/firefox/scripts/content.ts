@@ -167,7 +167,7 @@ intervalId = setInterval(() => {
         }
 
         // Get ID of YouTube video from URL
-        var id = window.location.href.match(/v=[^&]*/)[0];
+        var id = window.location.href.match(/(?<=v=)[^&]*/)[0];
         lastId = "";
         console.log(lastId);
 
