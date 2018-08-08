@@ -167,7 +167,7 @@ intervalId = setInterval(() => {
         }
 
         // Get ID of YouTube video from URL
-        var id = window.location.href.match(/(?<=v=)[^&]*/)[0];
+        var id = window.location.href.match(/v=([^&]*)/)[1];
         lastId = "";
         console.log(lastId);
 
@@ -178,7 +178,7 @@ intervalId = setInterval(() => {
             // Normally we would use -1 or 5 but YouTube's API is unreliable
             // Therefore we will use 1 (playing) and check if the data has already been loaded
             console.log(statusInteger);
-            id = window.location.href.match(/v=[^&]*/)[0];
+            id = window.location.href.match(/v=([^&]*)/)[1];
             if (statusInteger == 1 && lastId != id) {
                 lastId = id;
                 removeMainStructure();
@@ -206,10 +206,10 @@ intervalId = setInterval(() => {
 
                 processResponse(response, statusCode);
             }).fail((jqXHR, textStatus, error) => {
-                addError("220");
                 console.log(error);
                 console.log(jqXHR);
                 console.log(textStatus);
+                addError("220");
             })
         };
     }
