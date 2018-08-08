@@ -21,7 +21,7 @@ intervalId = setInterval(() => {
         const SELECT_URL = "https://oxygenrain.com/yourtime/search";
         const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
         const META = JSON.parse(document.getElementsByTagName('meta')['your-time-meta'].getAttribute('content'));
-        const DEFAULT_TIMEOUT = 5000;
+        const DEFAULT_TIMEOUT = 3000;
 
         var lastId = "";
 
@@ -133,7 +133,7 @@ intervalId = setInterval(() => {
                     secTextOnclick = null;
                     break;
                 default:
-                    mainTextMsg = "Unknown error code"
+                    mainTextMsg = "Unknown status code"
                     secTextMsg = "Are you using the latest Your Time version?"
                     secTextOnclick = () => {
                         let win = window.open('https://addons.mozilla.org/en-US/firefox/addon/your-time/', '_blank');
@@ -153,17 +153,19 @@ intervalId = setInterval(() => {
         }
 
         function removeMainStructure(): void {
-            while ($("#your-time").length) {
-                $("#info-contents").children("#your-time").remove();
-            }
-            while ($("#your-time-loader").length) {
-                $("#info-contents").children("#your-time-loader").remove();
-            }
+            $("#your-time").remove();
         }
 
         function addTimemark() {
             alert("TODO:");
         }
+
+        // Append loader
+        $("<img/>", {
+            src: META.loader,
+            id: "your-time-loader",
+            style: "display: block; margin: auto; margin-top: 5px;"
+        }).height("25px").appendTo($("#info-contents"));
 
         // Get ID of YouTube video from URL
         var id = window.location.href.match(/v=([^&]*)/)[1];
@@ -180,7 +182,6 @@ intervalId = setInterval(() => {
             id = window.location.href.match(/v=([^&]*)/)[1];
             if (statusInteger == 1 && lastId != id) {
                 lastId = id;
-                removeMainStructure();
                 main();
             }
         });
@@ -190,6 +191,7 @@ intervalId = setInterval(() => {
         player.playVideo();
 
         function main() {
+            removeMainStructure();
             addMainStructure();
             $.ajax({
                 method: "GET",
@@ -198,6 +200,7 @@ intervalId = setInterval(() => {
                 data: { v: id },
                 timeout: DEFAULT_TIMEOUT
             }).done(rp => {
+            $("#your-time-loader").remove();
                 // Response's first 3 characters will be the status code
                 let statusCode = rp.substr(0, 3);
                 // Anything else is considered JSON
@@ -205,6 +208,8 @@ intervalId = setInterval(() => {
 
                 processResponse(response, statusCode);
             }).fail((jqXHR, textStatus, error) => {
+            $("#your-time-loader").remove();
+
                 console.log(error);
                 console.log(jqXHR);
                 console.log(textStatus);

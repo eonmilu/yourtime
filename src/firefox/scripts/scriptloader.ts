@@ -8,7 +8,7 @@ var metaSources = {
 $("<script/>", { src: browser.extension.getURL("scripts/jquery.min.js") }).appendTo("head");
 // Load stylesheet
 $("<link/>", {
-    src: browser.extension.getURL("../resources/stylesheet.css"),
+    href: browser.extension.getURL("../resources/stylesheet.css"),
     rel: "stylesheet"
 }).appendTo("head");
 
@@ -81,13 +81,6 @@ var ui = new firebaseui.auth.AuthUI(firebase.auth());
 ui.start('#firebaseui-auth-container', uiConfig);
 */
 let script = $("<script/>", { src: browser.extension.getURL("scripts/content.js") });
-let loader = $("<img/>", {
-    src: browser.extension.getURL("../resources/loader.svg"),
-    alt: "Loading...",
-    id: "your-time-loader",
-    height: "45px", width: "65px",
-    style: "display: block; margin: auto;"
-});
 
 let meta = $("<meta/>", {
     name: "your-time-meta",
@@ -104,7 +97,6 @@ intervalId = setInterval(() => {
     if ($("#info-contents").length) {
         console.log("Found target div. Adding script...");
 
-        $("#info-contents").append(loader);
         $("head").append(meta, script);
         clearInterval(intervalId);
     }
