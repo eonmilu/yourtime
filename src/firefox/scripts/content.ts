@@ -144,12 +144,11 @@ intervalId = setInterval(() => {
 
             $("<div/>", { id: "your-time-error" }).append(
                 $("<span/>", {
-                    class: "main-text",
-                    innerText: mainTextMsg
-                }),
+                    class: "main-text"
+                }).text(mainTextMsg),
                 $("<a/>", {
-                    class: "secondary-text", onclick: secTextOnclick, innerText: secTextMsg
-                })
+                    class: "secondary-text", onclick: secTextOnclick
+                }).text(secTextMsg)
             ).appendTo($("#your-time"))
         }
 
