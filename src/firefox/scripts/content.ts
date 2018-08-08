@@ -16,62 +16,47 @@ browser.cookies.get({
 const SELECT_URL = "https://oxygenrain.com/yourtime/search";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
 const META = JSON.parse(document.getElementsByTagName('meta')['your-time-meta'].getAttribute('content'));
-const DEFAULT_TIMEOUT = 3000;
+const DEFAULT_TIMEOUT = 1500;
 
-var lastId = "";
-var player: any;
 var id: string;
-// Check every 10 ms if jQuery has been loaded
-var intervalId;
-intervalId = setInterval(() => {
-    if (!(typeof $ === 'undefined' || $ === null)) {
-        clearInterval(intervalId);
+// Append loader
+var loader = $("<img/>", {
+    src: META.loader,
+    id: "your-time-loader",
+    style: "display: block; margin: auto; margin-top: 5px;"
+}).height("25px");
+loader.appendTo($("#info-contents"));
 
-        // Append loader
-        $("<img/>", {
-            src: META.loader,
-            id: "your-time-loader",
-            style: "display: block; margin: auto; margin-top: 5px;"
-        }).height("25px").appendTo($("#info-contents"));
+// Get ID of YouTube video from URL
+id = window.location.href.match(/v=([^&]*)/)[1];
 
-        // Get ID of YouTube video from URL
-        id = window.location.href.match(/v=([^&]*)/)[1];
-        lastId = "";
+// Due to the delay, the first 5 for VIDEO CUED might not be registered
+// Therefore the first load will ignore it
+main();
 
-        // Player MUST be assigned with document.getElementById, otherwise the YouTube API will not work
-        player = document.getElementById("movie_player");
-        player.addEventListener("onStateChange", (statusInteger: any) => {
-            // https://developers.google.com/youtube/iframe_api_reference#Events
-            // Normally we would use -1 or 5 but YouTube's API is unreliable
-            // Therefore we will use 1 (playing) and check if the data has already been loaded
-            console.log(statusInteger);
-            id = window.location.href.match(/v=([^&]*)/)[1];
-            if (statusInteger == 1 && lastId != id) {
-                lastId = id;
-                main();
-            }
-        });
-
-        // HACK: Make sure the pause/play event is fired
-        player.pauseVideo();
-        player.playVideo();
-
-
+// Player MUST be assigned with document.getElementById, otherwise the YouTube API will not work
+var player: any = document.getElementById("movie_player");
+player.addEventListener("onStateChange", (statusInteger: any) => {
+    // https://developers.google.com/youtube/iframe_api_reference#Events
+    console.log(statusInteger);
+    id = window.location.href.match(/v=([^&]*)/)[1];
+    if (statusInteger == 5) {
+        main();
+        loader.appendTo($("#info-contents"));
     }
-
-}, 10);
-
+});
 
 function main() {
     removeMainStructure();
-    addMainStructure();
     $.ajax({
         method: "GET",
         url: SELECT_URL,
         dataType: "text",
         data: { v: id },
-        timeout: DEFAULT_TIMEOUT
+        timeout: DEFAULT_TIMEOUT,
     }).done(rp => {
+        addMainStructure();
+
         $("#your-time-loader").remove();
         // Response's first 3 characters will be the status code
         let statusCode = rp.substr(0, 3);
@@ -80,13 +65,15 @@ function main() {
 
         processResponse(response, statusCode);
     }).fail((jqXHR, textStatus, error) => {
+        addMainStructure();
+
         $("#your-time-loader").remove();
 
         console.log(error);
         console.log(jqXHR);
         console.log(textStatus);
         addError("220");
-    })
+    });
 }
 
 // Transform seconds to ((days):(hours):)minutes:seconds
@@ -213,7 +200,8 @@ function addError(statusCode: string) {
         $("<a/>", {
             class: "secondary-text", onclick: secTextOnclick
         }).text(secTextMsg)
-    ).appendTo($("#your-time"))
+    ).appendTo($("#your-time"));
+    $("#your-time").show()
 }
 
 function removeMainStructure(): void {

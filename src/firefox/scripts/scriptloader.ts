@@ -5,7 +5,10 @@ var metaSources = {
 }
 
 // Load jQuery as soon as possible
-$("<script/>", { src: browser.extension.getURL("scripts/jquery.min.js") }).appendTo("head");
+$("<script/>", {
+    src: browser.extension.getURL("scripts/jquery.min.js"),
+    async: true,
+}).appendTo("head");
 // Load stylesheet
 $("<link/>", {
     href: browser.extension.getURL("../resources/stylesheet.css"),
@@ -80,7 +83,10 @@ var ui = new firebaseui.auth.AuthUI(firebase.auth());
 // The start method will wait until the DOM is loaded.
 ui.start('#firebaseui-auth-container', uiConfig);
 */
-let script = $("<script/>", { src: browser.extension.getURL("scripts/content.js") });
+let script = $("<script/>", {
+    src: browser.extension.getURL("scripts/content.js"),
+    defer: true
+});
 
 let meta = $("<meta/>", {
     name: "your-time-meta",
