@@ -15,5 +15,7 @@ yourtime: scripts/* ../common/resources/* ../common/* ../node_modules/*
 	tsc
 	# Copy third party licenses
 	cp ../node_modules/@types/jquery/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/tsjquery
+	# Move popup.js to the popup folder
+	mv ../../build/firefox/scripts/popup.js ../../build/firefox/popup/popup.js
 	# Clean up
 	rm -rf ../../build/firefox/resources/stylesheet.css.map ../../build/firefox/resources/stylesheet.scss
