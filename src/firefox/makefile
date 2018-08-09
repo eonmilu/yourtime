@@ -10,9 +10,9 @@ yourtime: scripts/* ../common/*
 	# Copy bundled manifest.json to build directory
 	cp manifest.json ../../build/firefox/
 	# Compile SCSS to the resource folder in the build directory
-	sass --no-cache --force ../common/resources/stylesheet.scss ../../build/firefox/resources/stylesheet.css
+	sass ../common/resources/stylesheet.scss ../../build/firefox/resources/stylesheet.css
 	# Compile SCSS to the popup folder in the build directory
-	sass --no-cache --force ../common/popup/popup.scss ../../build/firefox/popup/popup.css
+	sass ../common/popup/popup.scss ../../build/firefox/popup/popup.css
 	# Compile TS files using tsconfig.json
 	tsc
 	# Copy third party licenses
