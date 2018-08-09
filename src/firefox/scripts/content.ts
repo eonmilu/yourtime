@@ -177,12 +177,12 @@ function addError(statusCode: string) {
             secTextMsg = "Submit your own. "
             secTextOnclick = addTimemark;
             break;
-        case "":
         case "220":
             mainTextMsg = "Internal server error. "
             secTextMsg = "Try again later."
             secTextOnclick = null;
             break;
+        case "":
         default:
             mainTextMsg = "Unknown status code"
             secTextMsg = "Are you using the latest Your Time version?"
@@ -198,8 +198,9 @@ function addError(statusCode: string) {
             class: "main-text"
         }).text(mainTextMsg),
         $("<a/>", {
-            class: "secondary-text", onclick: secTextOnclick
+            class: "secondary-text",
         }).text(secTextMsg)
+            .click(secTextOnclick)
     ).appendTo($("#your-time"));
     $("#your-time").show()
 }
