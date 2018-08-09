@@ -1,18 +1,3 @@
-/*var firebaseUser;
-browser.cookies.get({
-    firsyPartyDomain: "oxygenrain.com",
-    name: "your-time-login",
-    url: "oxygenrain.com/yourtime/"
-}
-).then((c) => {
-    if (c === null) {
-        // If there's no cookie, create a new anonymous user
-        firebaseUser = firebase.auth().currentUser;
-    } else {
-        firebaseUser = JSON.parse(c.value);
-    }
-})*/
-
 const SELECT_URL = "https://oxygenrain.com/yourtime/search";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
 const META = JSON.parse(document.getElementsByTagName('meta')['your-time-meta'].getAttribute('content'));

@@ -28,7 +28,6 @@
   "web_accessible_resources": [
     "scripts/content.js",
     "scripts/jquery.min.js",
-    "scripts/platform.js",
     "resources/*",
     "LEGAL/*"
   ],
@@ -36,7 +35,7 @@
   "content_scripts": [{
     "matches": ["https://www.youtube.com/*"],
     "run_at": "document_idle",
-    "js": ["scripts/platform.js", "scripts/jquery.min.js", "scripts/scriptloader.js"]
+    "js": ["scripts/jquery.min.js", "scripts/scriptloader.js"]
   }],
 
   "browser_action": {
