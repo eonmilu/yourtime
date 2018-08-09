@@ -11,6 +11,8 @@ yourtime: scripts/* ../common/* ../node_modules/*
 	cp manifest.json ../../build/firefox/
 	# Compile SCSS to the resource folder in the build directory
 	sass -Cf ../common/resources/stylesheet.scss ../../build/firefox/resources/stylesheet.css
+	# Compile SCSS to the popup folder in the build directory
+	sass -Cf ../common/popup/popup.scss ../../build/firefox/popup/popup.css
 	# Compile TS files using tsconfig.json
 	tsc
 	# Copy third party licenses
@@ -19,3 +21,4 @@ yourtime: scripts/* ../common/* ../node_modules/*
 	mv ../../build/firefox/scripts/popup.js ../../build/firefox/popup/popup.js
 	# Clean up
 	rm -rf ../../build/firefox/resources/stylesheet.css.map ../../build/firefox/resources/stylesheet.scss
+	rm -rf ../../build/firefox/popup/popup.css.map ../../build/firefox/popup/popup.scss
