@@ -1,4 +1,4 @@
-yourtime: scripts/* ../common/* ../node_modules/*
+yourtime: scripts/* ../common/*
 	# Create build directory if it does not exist
 	mkdir -p ../../build
 	# Delete the previous Firefox build if it exists

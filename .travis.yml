@@ -1,4 +1,1 @@
-language: node_js
 script: cd src/firefox && make
-node_js:
-  - "8.11.3"
