@@ -1,1 +1,5 @@
+before_script:
+  - npm install -g typescript
+  - npm install -g sass
+  - npm install @types/jquery
 script: cd src/firefox && make
