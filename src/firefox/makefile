@@ -15,8 +15,11 @@ yourtime: scripts/* ../common/*
 	sass ../common/popup/popup.scss ../../build/firefox/popup/popup.css
 	# Compile TS files using tsconfig.json
 	tsc
+	# Copy jQuery from node_modules
+	cp ../node_modules/jquery/dist/jquery.min.js ../../build/firefox/scripts/jquery.min.js
 	# Copy third party licenses
 	cp ../node_modules/@types/jquery/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/tsjquery
+	cp ../node_modules/jquery/LICENSE.txt ../../build/firefox/LEGAL/THIRD_PARTIES/jquery
 	# Move popup.js to the popup folder
 	mv ../../build/firefox/scripts/popup.js ../../build/firefox/popup/popup.js
 	# Clean up

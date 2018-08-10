@@ -3,4 +3,5 @@ before_script:
   - npm install -g sass
   - cd src/
   - npm install @types/jquery
+  - npm install jquery
 script: cd firefox/ && make
