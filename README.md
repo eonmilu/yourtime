@@ -8,4 +8,12 @@ The web extension is only currently available on Firefox. You can get it [here](
 
 ## Compilation
 
+Dependencies:
+
+- `npm`
+- `make`
+- `tsc`
+- `sass`
+- `@types/jquery` (Install on src/ folder)
+
 Navigate to your target browser in the src/ folder and run `make`
