@@ -1,4 +1,4 @@
-# yourtime
+# yourtime [![Build status](https://travis-ci.org/eonmilu/yourtime.svg?branch=master)](https://travis-ci.org/eonmilu/yourtime)
 
 A web extension that shows community-submitted, important timemarks on YouTube videos.
 
