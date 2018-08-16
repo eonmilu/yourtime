@@ -16,8 +16,7 @@ $("<link/>", {
 }).appendTo("head");
 
 let script = $("<script/>", {
-    src: browser.extension.getURL("scripts/content.js"),
-    defer: true
+    src: browser.extension.getURL("scripts/content.js")
 });
 
 let meta = $("<meta/>", {
@@ -35,7 +34,7 @@ intervalId = setInterval(() => {
     if ($("#info-contents").length) {
         console.log("Found target div. Adding script...");
 
-        $("head").append(meta, script);
+        $("body").prepend(meta, script);
         clearInterval(intervalId);
     }
 }, 10);
