@@ -4,6 +4,7 @@ const META = JSON.parse(document.getElementsByTagName('meta')['your-time-meta'].
 const DEFAULT_TIMEOUT = 1500;
 
 var id: string;
+var lastId: string;
 // Append loader
 var loader = $("<img/>", {
     src: META.loader,
@@ -15,21 +16,22 @@ loader.appendTo($("#info-contents"));
 // Get ID of YouTube video from URL
 id = window.location.href.match(/v=([^&]*)/)[1];
 
-// Due to the delay, the first 5 for VIDEO CUED might not be registered
-// Therefore the first load will ignore it
-main();
-
 // Player MUST be assigned with document.getElementById, otherwise the YouTube API will not work
 var player: any = document.getElementById("movie_player");
 player.addEventListener("onStateChange", (statusInteger: any) => {
     // https://developers.google.com/youtube/iframe_api_reference#Events
+    // Normally we would use -1 or 5 but YouTube's API is unreliable
+    // Therefore we will use 1 (playing) and check if the data has already been loaded
     console.log(statusInteger);
     id = window.location.href.match(/v=([^&]*)/)[1];
-    if (statusInteger == 5) {
+    if (statusInteger == 1 && lastId != id) {
+        lastId = id;
         main();
-        loader.appendTo($("#info-contents"));
     }
 });
+// HACK: Make sure the pause/play event is fired
+player.pauseVideo();
+player.playVideo();
 
 function main() {
     removeMainStructure();
@@ -191,7 +193,9 @@ function addError(statusCode: string) {
 }
 
 function removeMainStructure(): void {
-    $("#your-time").remove();
+    while ($("your-time").length) {
+        $("#your-time").remove();
+    }
 }
 
 function addTimemark() {
