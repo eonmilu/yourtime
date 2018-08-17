@@ -26,6 +26,7 @@ player.addEventListener("onStateChange", (statusInteger: any) => {
     id = window.location.href.match(/v=([^&]*)/)[1];
     if (statusInteger == 1 && lastId != id) {
         lastId = id;
+        loader.appendTo($("#info-contents"));
         main();
     }
 });
@@ -66,7 +67,8 @@ function main() {
 // Transform seconds to ((days):(hours):)minutes:seconds
 function secondsToString(ss: any): string {
     // Ignore negative seconds and types other than number
-    if (ss < 0 || !(ss / ss === 1)) return undefined;
+    if (ss < 0 || typeof ss != "number")
+    return undefined;
 
     let dd: any = Math.floor(ss / (3600 * 24));
     ss -= dd * 3600 * 24;
