@@ -7,7 +7,6 @@ var metaSources = {
 // Load jQuery as soon as possible
 $("<script/>", {
     src: browser.extension.getURL("scripts/jquery.min.js"),
-    async: true,
 }).appendTo("head");
 // Load stylesheet
 $("<link/>", {
@@ -16,7 +15,8 @@ $("<link/>", {
 }).appendTo("head");
 
 let script = $("<script/>", {
-    src: browser.extension.getURL("scripts/content.js")
+    src: browser.extension.getURL("scripts/content.js"),
+    defer: true,
 });
 
 let meta = $("<meta/>", {
