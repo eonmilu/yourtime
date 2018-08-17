@@ -27,14 +27,14 @@ player.addEventListener("onStateChange", (statusInteger: any) => {
     if (statusInteger == 1 && lastId != id) {
         lastId = id;
         loader.appendTo($("#info-contents"));
-        main();
+        onLayoutLoaded();
     }
 });
 // HACK: Make sure the pause/play event is fired
 player.pauseVideo();
 player.playVideo();
 
-function main() {
+function onLayoutLoaded() {
     removeMainStructure();
     $.ajax({
         method: "GET",
