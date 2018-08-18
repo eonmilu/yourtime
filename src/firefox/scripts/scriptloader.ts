@@ -1,7 +1,9 @@
-declare var browser: any;
+declare var browser, YT: any;
+const intervalTime = 10;
+
 // This meta element contains any internal url the injected script can't access withour the browser's APIs
 var metaSources = {
-    loader: browser.extension.getURL("../resources/loader.svg")
+    loaderIconURL: browser.extension.getURL("../resources/loader.svg"),
 }
 
 // Load jQuery as soon as possible
@@ -27,7 +29,7 @@ let meta = $("<meta/>", {
 
 // Check every 10 ms if the div has been loaded
 var intervalId;
-intervalId = setInterval(() => {
+intervalId = setInterval(function () {
     console.log("Searching for target div...");
 
     // false if it has not loaded.
@@ -37,4 +39,4 @@ intervalId = setInterval(() => {
         $("body").prepend(meta, script);
         clearInterval(intervalId);
     }
-}, 10);
+}, intervalTime);
