@@ -84,13 +84,23 @@ function secondsToDate(ss: any): string {
 	let mm: any = Math.floor(ss / 60);
 	ss -= mm * 60;
 
-	// Ensure two-digits
-	[dd, hh, mm, ss] = [dd, hh, mm, ss].map(p => p < 10 ? p = "0" + p : p);
+	ensureTwoDigits();
 
-	let time = `${dd}:${hh}:${mm}:${ss}`;
+	const time = `${dd}:${hh}:${mm}:${ss}`;
 
 	// Remove unnecessary "00:"s, keeping the last two for formatting
 	return time.replace(/^(00\:){1,2}/gm, "");
+
+	function ensureTwoDigits() {
+		if (dd < 10)
+			dd = "0" + dd;
+		if (hh < 10)
+			hh = "0" + hh;
+		if (mm < 10)
+			mm = "0" + mm;
+		if (ss < 10)
+			ss = "0" + ss;
+	}
 }
 
 // Make numbers human-readable
