@@ -1,5 +1,5 @@
 declare var browser, YT: any;
-const intervalTime = 10;
+const INTERVAL_TIME = 10;
 
 // This meta element contains any internal url the injected script can't access withour the browser's APIs
 var metaSources = {
@@ -39,4 +39,4 @@ intervalId = setInterval(function () {
         $("body").prepend(meta, script);
         clearInterval(intervalId);
     }
-}, intervalTime);
+}, INTERVAL_TIME);
