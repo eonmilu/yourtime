@@ -22,7 +22,7 @@
     "https://www.youtube.com/",
     "https://oxygenrain.com/yourtime/",
     "activeTab",
-    "cookies"
+    "storage"
   ],
 
   "web_accessible_resources": [
@@ -36,6 +36,10 @@
     "matches": ["https://www.youtube.com/*"],
     "run_at": "document_idle",
     "js": ["scripts/jquery.min.js", "scripts/scriptloader.js"]
+  }, {
+    "matches": ["https://oxygenrain.com/yourtime/auth/"],
+    "run_at": "document_idle",
+    "js": ["scripts/jquery.min.js", "scripts/oxygenrain.js"]
   }],
 
   "browser_action": {
