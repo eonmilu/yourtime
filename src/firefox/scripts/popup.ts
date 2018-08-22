@@ -1,3 +1,5 @@
+const LOG_IN_URL = "https://oxygenrain.com/yourtime/auth/google.html";
+
 browser.storage.local.get("yourtimeauth")
 	.then((content) => {
 		console.log(content)
@@ -12,12 +14,6 @@ browser.storage.local.get("yourtimeauth")
 	});
 
 function logOut() {
-	browser.storage.local.remove("yourtimeauth").then(() => {
-		$("#loginStatus").text("Currently not logged in");
-		$("#login")
-			.text("Log in with Google")
-			.attr("href", "https://oxygenrain.com/yourtime/auth/google.html");
-	}).fail((error) => {
-		console.log(error);
-	});
+	let win = window.open(LOG_IN_URL, "_blank");
+	win.focus();
 }
