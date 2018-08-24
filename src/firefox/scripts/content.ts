@@ -8,6 +8,7 @@ const STATUS_CODE = {
 	NOT_FOUND: "210",
 	ERROR: "220"
 };
+const PLAYING = 1;
 
 var loaderIcon = $("<img/>", {
 	src: META.loaderIconURL,
@@ -27,7 +28,7 @@ player.addEventListener("onStateChange", (statusInteger: Number) => {
 	// However, YouTube's IFrame Player API is unreliable,
 	// so we shall use PLAYING and check if the timemarks have been loaded
 	videoID = getCurrentVideoID();
-	if (statusInteger == YT.PlayerState.PLAYING && lastId != videoID) {
+	if (statusInteger == PLAYING && lastId != videoID) {
 		lastId = videoID;
 		loaderIcon.appendTo($("#info-contents"));
 		onLayoutLoaded();
@@ -177,12 +178,12 @@ function addError(statusCode: string) {
 			secondaryTextOnclick = createTimemark;
 			break;
 		case STATUS_CODE.ERROR:
-			mainTextMsg = "Your Time could not connect to the server"
+			mainTextMsg = "Your Time could not connect to the server."
 			secondaryTextMsg = "Try again later."
 			secondaryTextOnclick = null;
 			break;
 		default:
-			mainTextMsg = "Unknown status code"
+			mainTextMsg = "Unknown status code."
 			secondaryTextMsg = "Are you using the latest Your Time version?"
 			secondaryTextOnclick = function () {
 				let win = window.open(EXTENSION_URL, "_blank");
