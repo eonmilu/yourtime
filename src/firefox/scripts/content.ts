@@ -139,20 +139,19 @@ function appendChildToMainStructure(childData: any): void {
 
 	const number = $("<span/>", {
 		class: "number"
-	}).text(readablizeNumber(childData["votes"]));
+	}).text(readablizeNumber(childData.votes));
 
 	const timemark = $("<a/>", {
 		class: "timemark",
 		rel: "nofollow"
-	}).text(secondsToDate(parseInt(childData["time"])))
+	}).text(secondsToDate(parseInt(childData.time)))
 		.click(() => {
-			// HACK: bypass TS' type check
-			player["seekTo"](childData["time"]);
+			player.seekTo(childData.time);
 		});
 
 	const content = $("<span/>", {
 		class: "content"
-	}).text(childData["content"]);
+	}).text(childData.content);
 
 	votes.append(upvote)
 		.append(number)
