@@ -146,7 +146,7 @@ function appendChildToMainStructure(childData: any): void {
 	const timemark = $("<a/>", {
 		class: "timemark",
 		rel: "nofollow"
-	}).text(secondsToDate(parseInt(childData.time)))
+	}).text(secondsToDate(childData.timemark))
 		.click(() => {
 			player.seekTo(childData.time);
 		});
