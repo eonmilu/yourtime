@@ -106,15 +106,18 @@ function secondsToDate(ss: any): string {
 
 // Make numbers human-readable
 function readablizeNumber(n: number): string {
+	if (n == 0) return "0"
 	let s = ['', 'k', 'M', 'B'];
-	let e = Math.floor(Math.log(n) / Math.log(1000));
+	var e = Math.floor(Math.log(Math.abs(n)) / Math.log(1000));
 	return Math.round((n / Math.pow(1000, e))) + s[e];
 }
 
 function addMainStructure(): void {
 	$("<div/>", {
 		id: "your-time"
-	}).appendTo("#info-contents");
+	}).append($("<div/>", {
+		id: "your-time-submissions"
+	})).appendTo("#info-contents");
 }
 
 function appendChildToMainStructure(childData: any): void {
