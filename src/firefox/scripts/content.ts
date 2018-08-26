@@ -117,7 +117,10 @@ function addMainStructure(): void {
 		id: "your-time"
 	}).append($("<div/>", {
 		id: "your-time-submissions"
-	})).appendTo("#info-contents");
+	}).append($("<div/>", {
+		id: "your-time-details"
+	})
+	)).appendTo("#info-contents");
 }
 
 function appendChildToMainStructure(childData: any): void {
