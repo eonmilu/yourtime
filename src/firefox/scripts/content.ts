@@ -1,3 +1,4 @@
+declare var $: any; //TODO: Remove
 const SELECT_URL = "https://oxygenrain.com/yourtime/search";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
 const META = JSON.parse($("meta[name='your-time-meta'").attr('content'));
@@ -119,44 +120,49 @@ function addMainStructure(): void {
 
 function appendChildToMainStructure(childData: any): void {
 	// TODO: redesing, rewrite with jQuery
-	let submission = document.createElement("div");
-	let votes = document.createElement("div");
-	let upvote = document.createElement("svg");
-	let number = document.createElement("span");
-	let downvote = document.createElement("svg");
-	let seconds = document.createElement("a");
-	let comment = document.createElement("span");
-	let triangle = document.createElement("polygon");
-
-	submission.className = "submission";
-	votes.className = "votes";
-	upvote.className = "upvote";
-	number.className = "number";
-	downvote.className = "downvote";
-	seconds.className = "seconds";
-	comment.className = "comment";
-
-	upvote.appendChild(triangle);
-	downvote.appendChild(triangle);
-
-	number.innerText = readablizeNumber(childData["votes"]);
-	seconds.innerText = secondsToDate(parseInt(childData["time"]));
-	seconds.addEventListener('click', function () {
-		// HACK: bypass TS' type check
-		player["seekTo"](childData["time"]);
+	const submission = $("<div/>", {
+		class: "submission"
 	});
-	seconds.rel = "nofollow";
-	comment.innerText = childData["comment"];
+	const votes = $("<div/>", {
+		class: "votes"
+	});
 
-	votes.appendChild(upvote);
-	votes.appendChild(number);
-	votes.appendChild(downvote);
+	const upvote = $("<img/>", {
+		class: "upvote",
+		src: "upvote.svg"
+	});
 
-	submission.appendChild(votes);
-	submission.appendChild(seconds);
-	submission.appendChild(comment);
+	const downvote = $("<img/>", {
+		class: "downvote",
+		src: "downvote.svg"
+	});
 
-	$("#your-time").append(submission);
+	const number = $("<span/>", {
+		class: "number"
+	}).text(readablizeNumber(childData["votes"]));
+
+	const timemark = $("<a/>", {
+		class: "timemark",
+		rel: "nofollow"
+	}).text(secondsToDate(parseInt(childData["time"])))
+		.click(() => {
+			// HACK: bypass TS' type check
+			player["seekTo"](childData["time"]);
+		});
+
+	const content = $("<span/>", {
+		class: "content"
+	}).text(childData["content"]);
+
+	votes.append(upvote);
+	votes.append(number);
+	votes.append(downvote);
+
+	submission.append(votes);
+	submission.append(timemark);
+	submission.append(content);
+
+	$("#your-time-submissions").append(submission);
 }
 
 // Parse and add the response to the DOM
