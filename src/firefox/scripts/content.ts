@@ -1,4 +1,3 @@
-declare var $: any; //TODO: Remove
 const SELECT_URL = "https://oxygenrain.com/yourtime/search";
 const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
 const META = JSON.parse($("meta[name='your-time-meta'").attr('content'));
@@ -139,20 +138,19 @@ function appendChildToMainStructure(childData: any): void {
 
 	const number = $("<span/>", {
 		class: "number"
-	}).text(readablizeNumber(childData["votes"]));
+	}).text(readablizeNumber(childData.votes));
 
 	const timemark = $("<a/>", {
 		class: "timemark",
 		rel: "nofollow"
-	}).text(secondsToDate(parseInt(childData["time"])))
+	}).text(secondsToDate(parseInt(childData.time)))
 		.click(() => {
-			// HACK: bypass TS' type check
-			player["seekTo"](childData["time"]);
+			player.seekTo(childData.time);
 		});
 
 	const content = $("<span/>", {
 		class: "content"
-	}).text(childData["content"]);
+	}).text(childData.content);
 
 	votes.append(upvote)
 		.append(number)
