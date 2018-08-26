@@ -154,13 +154,13 @@ function appendChildToMainStructure(childData: any): void {
 		class: "content"
 	}).text(childData["content"]);
 
-	votes.append(upvote);
-	votes.append(number);
-	votes.append(downvote);
+	votes.append(upvote)
+		.append(number)
+		.append(downvote);
 
-	submission.append(votes);
-	submission.append(timemark);
-	submission.append(content);
+	submission.append(votes)
+		.append(timemark)
+		.append(content);
 
 	$("#your-time-submissions").append(submission);
 }
