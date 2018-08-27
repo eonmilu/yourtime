@@ -36,13 +36,16 @@ $url-color-hover: #333333;
         .timemark {
             padding: 2px;
             margin: 2px 2px 0px 2px;
+            font-weight: 400;
+            font-size: 1.5rem;
         }
     }
     #your-time-details {
         border-style: solid;
-        border-color: #333333;
-        border-radius: 3px;
+        border-color: #444444;
         border-width: 1px;
+        border-radius: 4px;
+        box-shadow: 1px 4px 8px #888888;
 
         font-weight: 500;
         font-size: 1.5rem;
