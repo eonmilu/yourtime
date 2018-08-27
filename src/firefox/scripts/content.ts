@@ -129,7 +129,8 @@ function appendChildToMainStructure(childData: any): void {
 	const timemark = $("<div/>", {
 		class: "timemark",
 		comment: childData.content,
-		votes: childData.votes
+		votes: childData.votes,
+		seconds: childData.timemark
 	}).text(secondsToDate(childData.timemark));
 	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
@@ -137,6 +138,10 @@ function appendChildToMainStructure(childData: any): void {
 		const comment = $(this).attr("comment");
 		$("#your-time-details").text(comment);
 		$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
+	});
+
+	timemark.on("dblclick", function () {
+		player.seekTo($(this).attr("seconds"));
 	});
 
 	timemark.hover(
@@ -163,7 +168,6 @@ function votesToRGBA(votes: number, onHover = false) {
 		}
 		return `rgba(255, 255, 255, ${DEFAULT_TRANS})`;
 	}
-
 
 	const isNegative = votes < 0;
 	const absValue = Math.log(Math.abs(votes)) / Math.log(MAX_COLOR_VOTES);
