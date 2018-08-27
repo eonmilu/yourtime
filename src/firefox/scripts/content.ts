@@ -124,50 +124,47 @@ function addMainStructure(): void {
 }
 
 function appendChildToMainStructure(childData: any): void {
-	// TODO: redesing, rewrite with jQuery
-	const submission = $("<div/>", {
-		class: "submission"
-	});
-	const votes = $("<div/>", {
-		class: "votes"
-	});
-
-	const upvote = $("<img/>", {
-		class: "upvote",
-		src: "upvote.svg"
-	});
-
-	const downvote = $("<img/>", {
-		class: "downvote",
-		src: "downvote.svg"
-	});
-
-	const number = $("<span/>", {
-		class: "number"
-	}).text(readablizeNumber(childData.votes));
-
-	const timemark = $("<a/>", {
+	const timemark = $("<div/>", {
 		class: "timemark",
-		rel: "nofollow"
-	}).text(secondsToDate(childData.timemark))
-		.click(() => {
-			player.seekTo(childData.time);
-		});
+	}).text(secondsToDate(childData.timemark));
+	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
-	const content = $("<span/>", {
-		class: "content"
-	}).text(childData.content);
+	timemark.click(function () {
+			//$(this)
+		})
 
-	votes.append(upvote)
-		.append(number)
-		.append(downvote);
-
-	submission.append(votes)
-		.append(timemark)
-		.append(content);
-
-	$("#your-time-submissions").append(submission);
+	$("#your-time-submissions").append(timemark);
 }
+
+function votesToRGBA(votes: number) {
+	const transparency = 0.5;
+	// Anything beyond these will be considered as infinity
+	const MAX_COLOR_VOTES = 100;
+	const MIN_COLOR_VOTES = -MAX_COLOR_VOTES;
+
+	// Edge cases
+	if (votes > MAX_COLOR_VOTES) return `rgba(255, 127, 0, ${transparency})`;
+	if (votes == 0) return `rgba(255, 255, 255, ${transparency})`;
+	if (votes < MIN_COLOR_VOTES) return `rgba(255, 127, ${transparency})`;
+
+	const isNegative = votes < 0;
+	const absValue = Math.log(Math.abs(votes)) / Math.log(MAX_COLOR_VOTES);
+	console.log(absValue);
+
+	var redValue, greenValue, blueValue;
+	if (isNegative) {
+		redValue = 0;
+		greenValue = Math.round(absValue * 127);
+		blueValue = Math.round(absValue * 256);
+	} else {
+		redValue = Math.round(absValue * 256);
+		greenValue = Math.round(absValue * 127);
+		blueValue = 0;
+	}
+
+	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${transparency})`;
+}
+
 
 // Parse and add the response to the DOM
 function processResponse(statusCode: string, rawResponse: string): void {
