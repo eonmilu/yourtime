@@ -105,11 +105,11 @@ function secondsToTimestamp(seconds: any): string {
 }
 
 // Make numbers human-readable
-function readablizeNumber(n: number): string {
-	if (n == 0) return "0"
-	const s = ['', 'k', 'M', 'B'];
-	const e = Math.floor(Math.log(Math.abs(n)) / Math.log(1000));
-	return Math.round((n / Math.pow(1000, e))) + s[e];
+function readablizeNumber(number: number): string {
+	if (number == 0) return "0"
+	const suffixes = ['', 'k', 'M', 'B'];
+	const e = Math.floor(Math.log(Math.abs(number)) / Math.log(1000));
+	return Math.round((number / Math.pow(1000, e))) + suffixes[e];
 }
 
 function addMainStructure(): void {
