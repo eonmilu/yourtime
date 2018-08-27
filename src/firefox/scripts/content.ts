@@ -73,34 +73,34 @@ function ensureStateChange() {
 }
 
 // Transform seconds to ((days):(hours):)minutes:seconds
-function secondsToDate(ss: any): string {
+function secondsToTimestamp(seconds: any): string {
 	// Ignore negative seconds and types other than number
-	if (ss < 0 || typeof ss != "number")
+	if (seconds < 0 || typeof seconds != "number")
 		return undefined;
 
-	let dd: any = Math.floor(ss / (3600 * 24));
-	ss -= dd * 3600 * 24;
-	let hh: any = Math.floor(ss / 3600);
-	ss -= hh * 3600;
-	let mm: any = Math.floor(ss / 60);
-	ss -= mm * 60;
+	let days: any = Math.floor(seconds / (3600 * 24));
+	seconds -= days * 3600 * 24;
+	let hours: any = Math.floor(seconds / 3600);
+	seconds -= hours * 3600;
+	let minutes: any = Math.floor(seconds / 60);
+	seconds -= minutes * 60;
 
 	ensureTwoDigits();
 
-	const time = `${dd}:${hh}:${mm}:${ss}`;
+	const time = `${days}:${hours}:${minutes}:${seconds}`;
 
 	// Remove unnecessary "00:"s, keeping the last two for formatting
 	return time.replace(/^(00\:){1,2}/gm, "");
 
 	function ensureTwoDigits() {
-		if (dd < 10)
-			dd = "0" + dd;
-		if (hh < 10)
-			hh = "0" + hh;
-		if (mm < 10)
-			mm = "0" + mm;
-		if (ss < 10)
-			ss = "0" + ss;
+		if (days < 10)
+			days = "0" + days;
+		if (hours < 10)
+			hours = "0" + hours;
+		if (minutes < 10)
+			minutes = "0" + minutes;
+		if (seconds < 10)
+			seconds = "0" + seconds;
 	}
 }
 
@@ -131,7 +131,7 @@ function appendChildToMainStructure(childData: any): void {
 		comment: childData.content,
 		votes: childData.votes,
 		seconds: childData.timemark
-	}).text(secondsToDate(childData.timemark));
+	}).text(secondsToTimestamp(childData.timemark));
 	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
 	timemark.click(function () {
