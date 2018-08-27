@@ -120,63 +120,91 @@ function addMainStructure(): void {
 	const submissions = $("<div/>", {
 		id: "your-time-submissions"
 	});
-	submissions.append($("<div/>", {
-		id: "your-time-details"
-	}));
 
 	yourtime.append(submissions);
 	yourtime.appendTo("#info-contents");
 }
 
 function appendChildToMainStructure(childData: any): void {
-	// TODO: redesing, rewrite with jQuery
-	const submission = $("<div/>", {
-		class: "submission"
-	});
-	const votes = $("<div/>", {
-		class: "votes"
-	});
-
-	const upvote = $("<img/>", {
-		class: "upvote",
-		src: "upvote.svg"
-	});
-
-	const downvote = $("<img/>", {
-		class: "downvote",
-		src: "downvote.svg"
-	});
-
-	const voteNumber = $("<span/>", {
-		class: "number"
-	}).text(readablizeNumber(childData.votes));
-
-	const timemark = $("<a/>", {
+	const timemark = $("<div/>", {
 		class: "timemark",
-		rel: "nofollow"
-	}).text(secondsToDate(childData.timemark))
-		.click(() => {
-			player.seekTo(childData.time);
-		});
+		comment: childData.content,
+		votes: childData.votes
+	}).text(secondsToDate(childData.timemark));
+	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
-	const content = $("<span/>", {
-		class: "content"
-	}).text(childData.content);
+	timemark.click(function () {
+		const comment = $(this).attr("comment");
+		$("#your-time-details").text(comment);
+		$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
+	});
 
-	votes.append(upvote, voteNumber, downvote);
-	submission.append(votes, timemark, content);
+	timemark.hover(
+		function () {
+			$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
+		},
+		function () {
+			$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, false)}`);
+		}
+	);
 
-	$("#your-time-submissions").append(submission);
+	$("#your-time-submissions").append(timemark);
 }
+
+function votesToRGBA(votes: number, onHover = false) {
+	// Anything beyond these will be considered as infinity
+	const MAX_COLOR_VOTES = 1000;
+	const DEFAULT_TRANS = 0.6;
+
+	// Edge cases
+	if (votes == 0) {
+		if (onHover) {
+		return `rgba(200, 200, 200, ${DEFAULT_TRANS-0.2})`;
+		}
+		return `rgba(255, 255, 255, ${DEFAULT_TRANS})`;
+	}
+
+
+	const isNegative = votes < 0;
+	const absValue = Math.log(Math.abs(votes)) / Math.log(MAX_COLOR_VOTES);
+	var trueValue = absValue > 0.6 ? 0.6: absValue;
+
+	var redValue, greenValue, blueValue;
+	if (isNegative) {
+		redValue = 40;
+		greenValue = 120;
+		blueValue = 240;
+	} else {
+		redValue = 240;
+		greenValue = 120;
+		blueValue = 40;
+	}
+
+	if (onHover) {
+		trueValue += 0.3;
+	}
+
+	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${trueValue})`;
+}
+
 
 // Parse and add the response to the DOM
 function processResponse(statusCode: string, rawResponse: string): void {
 	if (statusCode == STATUS_CODE.FOUND) {
 		const response = JSON.parse(rawResponse);
 		response.forEach(appendChildToMainStructure);
+		addDetailsDiv();
 	} else {
 		addError(statusCode);
 	}
+}
+
+function addDetailsDiv() {
+	const details = $("<div/>", {
+		id: "your-time-details"
+	}).text("Click on one of above's timemarks to see it's content. Click twice to be taken to that timemark.");
+
+	details.appendTo("#your-time");
 }
 
 function addError(statusCode: string) {
