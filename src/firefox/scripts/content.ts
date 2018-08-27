@@ -10,7 +10,7 @@ const STATUS_CODE = {
 };
 const PLAYING = 1;
 
-var loaderIcon = $("<img/>", {
+const loaderIcon = $("<img/>", {
 	src: META.loaderIconURL,
 	id: "your-time-loader",
 	style: "display: block; margin: auto; margin-top: 5px;"
@@ -21,7 +21,7 @@ var lastId = "";
 var videoID = getCurrentVideoID();
 
 // Must use document.getElementById, otherwise the API will not work
-var player: any = document.getElementById("movie_player");
+const player: any = document.getElementById("movie_player");
 player.addEventListener("onStateChange", (statusInteger: Number) => {
 	// https://developers.google.com/youtube/iframe_api_reference#Events
 	// The UNSTARTED or CUED status should be used.
@@ -38,7 +38,7 @@ player.addEventListener("onStateChange", (statusInteger: Number) => {
 ensureStateChange();
 
 function getCurrentVideoID(): string {
-	let id = window.location.href.match(/v=([^&]*)/)[1];
+	const id = window.location.href.match(/v=([^&]*)/)[1];
 	return id;
 }
 
@@ -56,8 +56,8 @@ function onLayoutLoaded() {
 	}).done(rawResponse => {
 		// Response's first 3 characters are the status code
 		// Anything else is considered JSON
-		let statusCode = rawResponse.substr(0, 3);
-		let response = rawResponse.substr(3);
+		const statusCode = rawResponse.substr(0, 3);
+		const response = rawResponse.substr(3);
 
 		processResponse(statusCode, response);
 	}).fail((jqXHR, textStatus, error) => {
@@ -107,20 +107,25 @@ function secondsToDate(ss: any): string {
 // Make numbers human-readable
 function readablizeNumber(n: number): string {
 	if (n == 0) return "0"
-	let s = ['', 'k', 'M', 'B'];
-	var e = Math.floor(Math.log(Math.abs(n)) / Math.log(1000));
+	const s = ['', 'k', 'M', 'B'];
+	const e = Math.floor(Math.log(Math.abs(n)) / Math.log(1000));
 	return Math.round((n / Math.pow(1000, e))) + s[e];
 }
 
 function addMainStructure(): void {
-	$("<div/>", {
+	const yourtime = $("<div/>", {
 		id: "your-time"
-	}).append($("<div/>", {
+	});
+
+	const submissions = $("<div/>", {
 		id: "your-time-submissions"
-	}).append($("<div/>", {
+	});
+	submissions.append($("<div/>", {
 		id: "your-time-details"
-	})
-	)).appendTo("#info-contents");
+	}));
+
+	yourtime.append(submissions);
+	yourtime.appendTo("#info-contents");
 }
 
 function appendChildToMainStructure(childData: any): void {
@@ -158,13 +163,8 @@ function appendChildToMainStructure(childData: any): void {
 		class: "content"
 	}).text(childData.content);
 
-	votes.append(upvote)
-		.append(number)
-		.append(downvote);
-
-	submission.append(votes)
-		.append(timemark)
-		.append(content);
+	votes.append(upvote, number, downvote);
+	submission.append(votes, timemark, content);
 
 	$("#your-time-submissions").append(submission);
 }
@@ -172,7 +172,7 @@ function appendChildToMainStructure(childData: any): void {
 // Parse and add the response to the DOM
 function processResponse(statusCode: string, rawResponse: string): void {
 	if (statusCode == STATUS_CODE.FOUND) {
-		let response = JSON.parse(rawResponse);
+		const response = JSON.parse(rawResponse);
 		response.forEach(appendChildToMainStructure);
 	} else {
 		addError(statusCode);
@@ -180,39 +180,44 @@ function processResponse(statusCode: string, rawResponse: string): void {
 }
 
 function addError(statusCode: string) {
-	let mainTextMsg, secondaryTextMsg, secondaryTextOnclick;
+	const yourtimeError = $("<div/>", {
+		id: "your-time-error"
+	});
+
+	var main = $("<span/>", {
+		class: "main-text"
+	});
+	var secondary = $("<a/>", {
+		class: "secondary-text",
+	});
+
 	switch (statusCode) {
 		case STATUS_CODE.NOT_FOUND:
-			mainTextMsg = "Your Time didn't find any timemarks for this video."
-			secondaryTextMsg = "Submit your own."
-			secondaryTextOnclick = createTimemark;
+			main.text("Your Time didn't find any timemarks for this video.");
+			secondary.text("Submit your own.");
+			secondary.click(createTimemark);
 			break;
 		case STATUS_CODE.ERROR:
-			mainTextMsg = "Your Time could not connect to the server."
-			secondaryTextMsg = "Try again later."
-			secondaryTextOnclick = null;
+			main.text("Your Time could not connect to the server.");
+			secondary.text("Try again later.");
+			secondary.click(null);
 			break;
 		default:
-			mainTextMsg = "Unknown status code."
-			secondaryTextMsg = "Are you using the latest Your Time version?"
-			secondaryTextOnclick = function () {
-				let win = window.open(EXTENSION_URL, "_blank");
+			main.text("Unknown status code.");
+			secondary.text("Are you using the latest Your Time version?")
+			secondary.click(() => {
+				const win = window.open(EXTENSION_URL, "_blank");
 				win.focus();
-			};
+			});
 			break;
 	}
 
-	$("<div/>", {
-		id: "your-time-error"
-	}).append(
-		$("<span/>", {
-			class: "main-text"
-		}).text(mainTextMsg),
-		$("<a/>", {
-			class: "secondary-text",
-		}).text(secondaryTextMsg)
-			.click(secondaryTextOnclick)
-	).appendTo($("#your-time"));
+	yourtimeError.append(
+		main,
+		secondary
+	);
+
+	yourtimeError.appendTo($("#your-time"));
 	$("#your-time").show()
 }
 
