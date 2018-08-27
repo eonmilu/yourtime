@@ -120,9 +120,6 @@ function addMainStructure(): void {
 	const submissions = $("<div/>", {
 		id: "your-time-submissions"
 	});
-	submissions.append($("<div/>", {
-		id: "your-time-details"
-	}));
 
 	yourtime.append(submissions);
 	yourtime.appendTo("#info-contents");
@@ -131,44 +128,44 @@ function addMainStructure(): void {
 function appendChildToMainStructure(childData: any): void {
 	const timemark = $("<div/>", {
 		class: "timemark",
+		comment: childData.content
 	}).text(secondsToDate(childData.timemark));
 	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
 	timemark.click(function () {
-			//$(this)
-		})
+			const comment = $(this).attr("comment");
+			$("#your-time-details").text(comment);
+		});
 
 	$("#your-time-submissions").append(timemark);
 }
 
 function votesToRGBA(votes: number) {
-	const transparency = 0.5;
 	// Anything beyond these will be considered as infinity
-	const MAX_COLOR_VOTES = 100;
+	const MAX_COLOR_VOTES = 1000;
 	const MIN_COLOR_VOTES = -MAX_COLOR_VOTES;
+	const DEFAULT_TRANS = 0.6;
 
 	// Edge cases
-	if (votes > MAX_COLOR_VOTES) return `rgba(255, 127, 0, ${transparency})`;
-	if (votes == 0) return `rgba(255, 255, 255, ${transparency})`;
-	if (votes < MIN_COLOR_VOTES) return `rgba(255, 127, ${transparency})`;
+	if (votes > MAX_COLOR_VOTES) return `rgba(255, 127, 0, ${DEFAULT_TRANS})`;
+	if (votes == 0) return `rgba(255, 255, 255, ${DEFAULT_TRANS})`;
+	if (votes < MIN_COLOR_VOTES) return `rgba(255, 127, ${DEFAULT_TRANS})`;
 
 	const isNegative = votes < 0;
 	const absValue = Math.log(Math.abs(votes)) / Math.log(MAX_COLOR_VOTES);
-	console.log(absValue);
 
 	var redValue, greenValue, blueValue;
 	if (isNegative) {
-		redValue = 0;
-		greenValue = Math.round(absValue * 127);
-		blueValue = Math.round(absValue * 256);
+		redValue = 40;
+		greenValue = 120;
+		blueValue = 240;
 	} else {
-		redValue = Math.round(absValue * 256);
-		greenValue = Math.round(absValue * 127);
-		blueValue = 0;
+		redValue = 240;
+		greenValue = 120;
+		blueValue = 40;
 	}
 
-	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${transparency})`;
-}
+	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${absValue})`;}
 
 
 // Parse and add the response to the DOM
@@ -176,9 +173,18 @@ function processResponse(statusCode: string, rawResponse: string): void {
 	if (statusCode == STATUS_CODE.FOUND) {
 		const response = JSON.parse(rawResponse);
 		response.forEach(appendChildToMainStructure);
+		addDetailsDiv();
 	} else {
 		addError(statusCode);
 	}
+}
+
+function addDetailsDiv() {
+	const details = $("<div/>", {
+		id: "your-time-details"
+	}).text("Click on one of above's timemarks to see it's content. Click twice to be taken to that timemark.");
+
+	details.appendTo("#your-time");
 }
 
 function addError(statusCode: string) {
