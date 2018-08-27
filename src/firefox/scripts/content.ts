@@ -128,31 +128,46 @@ function addMainStructure(): void {
 function appendChildToMainStructure(childData: any): void {
 	const timemark = $("<div/>", {
 		class: "timemark",
-		comment: childData.content
+		comment: childData.content,
+		votes: childData.votes
 	}).text(secondsToDate(childData.timemark));
 	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
 	timemark.click(function () {
-			const comment = $(this).attr("comment");
-			$("#your-time-details").text(comment);
-		});
+		const comment = $(this).attr("comment");
+		$("#your-time-details").text(comment);
+		$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
+	});
+
+	timemark.hover(
+		function () {
+			$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
+		},
+		function () {
+			$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, false)}`);
+		}
+	);
 
 	$("#your-time-submissions").append(timemark);
 }
 
-function votesToRGBA(votes: number) {
+function votesToRGBA(votes: number, onHover = false) {
 	// Anything beyond these will be considered as infinity
 	const MAX_COLOR_VOTES = 1000;
-	const MIN_COLOR_VOTES = -MAX_COLOR_VOTES;
 	const DEFAULT_TRANS = 0.6;
 
 	// Edge cases
-	if (votes > MAX_COLOR_VOTES) return `rgba(255, 127, 0, ${DEFAULT_TRANS})`;
-	if (votes == 0) return `rgba(255, 255, 255, ${DEFAULT_TRANS})`;
-	if (votes < MIN_COLOR_VOTES) return `rgba(255, 127, ${DEFAULT_TRANS})`;
+	if (votes == 0) {
+		if (onHover) {
+		return `rgba(200, 200, 200, ${DEFAULT_TRANS-0.2})`;
+		}
+		return `rgba(255, 255, 255, ${DEFAULT_TRANS})`;
+	}
+
 
 	const isNegative = votes < 0;
 	const absValue = Math.log(Math.abs(votes)) / Math.log(MAX_COLOR_VOTES);
+	var trueValue = absValue > 0.6 ? 0.6: absValue;
 
 	var redValue, greenValue, blueValue;
 	if (isNegative) {
@@ -165,7 +180,12 @@ function votesToRGBA(votes: number) {
 		blueValue = 40;
 	}
 
-	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${absValue})`;}
+	if (onHover) {
+		trueValue += 0.3;
+	}
+
+	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${trueValue})`;
+}
 
 
 // Parse and add the response to the DOM
