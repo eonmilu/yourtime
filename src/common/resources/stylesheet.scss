@@ -30,44 +30,8 @@ $url-color-hover: #333333;
         }
     }
     #your-time-submissions {
-        .submission {
-            max-height: 25px;
-            min-height: 25px;
-            max-width: 100%;
-            min-width: 100%;
-            text-align: center;
-            display: flex;
-            flex-direction: row;
-            .votes {
-                width: 5%;
-                text-align: center;
-                padding: 5px;
-                .number {
-                    font-size: 14px;
-                }
-                .upvote {
-                    float: left;
-                    max-width: 15px;
-                }
-                .downvote {
-                    float: right;
-                    max-width: 15px;
-                }
-            }
-            .seconds {
-                width: 15%;
-                color: $url-color;
-                text-decoration: none;
-                font-size: large;
-                white-space: nowrap;
-            }
-            .comment {
-                display: inline-block;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                font-size: 14px;
-            }
-        }
+        text-align: center;
+        display: flex;
+        flex-direction: row;
     }
 }
