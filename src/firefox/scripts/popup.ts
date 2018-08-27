@@ -14,6 +14,6 @@ browser.storage.local.get("yourtimeauth")
 	});
 
 function logOut() {
-	let win = window.open(LOG_IN_URL, "_blank");
+	const win = window.open(LOG_IN_URL, "_blank");
 	win.focus();
 }
