@@ -147,7 +147,7 @@ function appendChildToMainStructure(childData: any): void {
 		src: "downvote.svg"
 	});
 
-	const number = $("<span/>", {
+	const voteNumber = $("<span/>", {
 		class: "number"
 	}).text(readablizeNumber(childData.votes));
 
@@ -163,7 +163,7 @@ function appendChildToMainStructure(childData: any): void {
 		class: "content"
 	}).text(childData.content);
 
-	votes.append(upvote, number, downvote);
+	votes.append(upvote, voteNumber, downvote);
 	submission.append(votes, timemark, content);
 
 	$("#your-time-submissions").append(submission);
