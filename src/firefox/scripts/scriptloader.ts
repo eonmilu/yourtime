@@ -2,7 +2,7 @@ declare var browser, YT: any;
 const INTERVAL_TIME = 10;
 
 // This meta element contains any internal url the injected script can't access withour the browser's APIs
-var metaSources = {
+const metaSources = {
     loaderIconURL: browser.extension.getURL("../resources/loader.svg"),
 }
 
@@ -16,20 +16,19 @@ $("<link/>", {
     rel: "stylesheet"
 }).appendTo("head");
 
-let script = $("<script/>", {
+const script = $("<script/>", {
     src: browser.extension.getURL("scripts/content.js"),
     defer: true,
 });
 
-let meta = $("<meta/>", {
+const meta = $("<meta/>", {
     name: "your-time-meta",
     content: JSON.stringify(metaSources)
 });
 
 
 // Check every 10 ms if the div has been loaded
-var intervalId;
-intervalId = setInterval(function () {
+const intervalId = setInterval(function () {
     console.log("Searching for target div...");
 
     // false if it has not loaded.
