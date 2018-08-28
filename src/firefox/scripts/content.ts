@@ -144,8 +144,26 @@ function appendChildToMainStructure(childData: any): void {
 			id: "votes"
 		});
 
-		const upvote = $("<div/>", {id: "upvote"});
-		const downvote = $("<div/>", {id: "downvote"});
+		const upvote = $("<div/>", {
+			id: "upvote"
+		}).click(function () {
+			// Set downvote gray, number and self orange
+			$(this).attr("style", "border-bottom: 8px solid orange;");
+			// Add one point
+			$("#votes #number").text((Number($("#votes #number").text()) + 1));
+			$("#votes #number").attr("style", "color: orange");
+			$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+		});
+		const downvote = $("<div/>", {
+			id: "downvote"
+		}).click(function () {
+			// Set upvote gray, number and self blue
+			$(this).attr("style", "border-bottom: 8px solid blue;");
+			$("#votes #number").attr("style", "color: blue");
+			// Substract one point
+			$("#votes #number").text(Number($("#votes #number").text()) - 1);
+			$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
+		});
 
 		const voteNumber = $("<span/>", {
 			id: "number"
