@@ -1,5 +1,6 @@
 $url-color: hsl(206.1, 79.3%, 52.7%);
 $url-color-hover: #333333;
+
 @font-face {
     font-family: Lato;
     src: url('Lato-Regular.ttf'),
@@ -7,49 +8,90 @@ $url-color-hover: #333333;
 
 #your-time {
     font-family: Lato, sans-serif;
+
     #your-time-error {
         border-left-style: solid;
         margin-top: 5px;
         border-left-color: #bd0f02;
         background-color: #ffd2cc;
+
         .main-text {
             padding: 10px 3px 10px 10px;
             font-weight: 500;
             font-size: 2rem;
         }
+
         .secondary-text {
             font-weight: 100;
             text-decoration: transparent;
             color: $url-color;
+
             :hover {
                 color: $url-color-hover;
             }
+
             :visited {
                 color: $url-color;
             }
         }
     }
+
     #your-time-submissions {
         text-align: center;
         display: flex;
         flex-direction: row;
+
         .timemark {
             padding: 2px;
             margin: 2px 2px 0px 2px;
-            font-weight: 400;
+            font-weight: 600;
             font-size: 1.5rem;
         }
     }
+
     #your-time-details {
         border-style: solid;
         border-color: #444444;
         border-width: 1px;
         border-radius: 4px;
         box-shadow: 1px 4px 8px #888888;
-
         font-weight: 500;
         font-size: 1.5rem;
         padding: 3px 3px 0px 3px;
         margin: 2px;
+        display: flex;
+        align-items: center;
+
+        #votes {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            #upvote {
+                padding: 0px 2px 0px 2px;
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 8px solid gray;
+            }
+
+            #number {
+                padding: 0px 4px 0px 4px;
+                font-weight: 400;
+                color: gray;
+            }
+
+            #downvote {
+                padding: 0px 2px 0px 2px;
+                transform: rotate(180deg);
+                padding: 1px;
+                width: 0;
+                height: 0;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 8px solid gray;
+            }
+        }
     }
 }

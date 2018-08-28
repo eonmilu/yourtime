@@ -135,8 +135,26 @@ function appendChildToMainStructure(childData: any): void {
 	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
 	timemark.click(function () {
+		const details = $("#your-time-details");
 		const comment = $(this).attr("comment");
-		$("#your-time-details").text(comment);
+
+		details.text(comment);
+
+		const votes = $("<div/>", {
+			id: "votes"
+		});
+
+		const upvote = $("<div/>", {id: "upvote"});
+		const downvote = $("<div/>", {id: "downvote"});
+
+		const voteNumber = $("<span/>", {
+			id: "number"
+		}).text($(this).attr("votes"));
+
+		votes.append(upvote, voteNumber, downvote);
+		details.prepend(votes);
+
+		$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
 	});
 
 	timemark.on("dblclick", function () {
@@ -163,14 +181,14 @@ function votesToRGBA(votes: number, onHover = false) {
 	// Edge cases
 	if (votes == 0) {
 		if (onHover) {
-		return `rgba(200, 200, 200, ${DEFAULT_TRANS-0.2})`;
+			return `rgba(200, 200, 200, ${DEFAULT_TRANS - 0.2})`;
 		}
 		return `rgba(255, 255, 255, ${DEFAULT_TRANS})`;
 	}
 
 	const isNegative = votes < 0;
 	const absValue = Math.log(Math.abs(votes)) / Math.log(MAX_COLOR_VOTES);
-	var trueValue = absValue > 0.6 ? 0.6: absValue;
+	var trueValue = absValue > 0.6 ? 0.6 : absValue;
 
 	var redValue, greenValue, blueValue;
 	if (isNegative) {
