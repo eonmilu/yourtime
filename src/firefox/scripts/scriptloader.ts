@@ -10,6 +10,7 @@ const metaSources = {
 $("<script/>", {
     src: browser.extension.getURL("scripts/jquery.min.js"),
 }).appendTo("head");
+
 // Load stylesheet
 $("<link/>", {
     href: browser.extension.getURL("../resources/stylesheet.css"),
@@ -18,7 +19,6 @@ $("<link/>", {
 
 const script = $("<script/>", {
     src: browser.extension.getURL("scripts/content.js"),
-    defer: true,
 });
 
 const meta = $("<meta/>", {
