@@ -137,7 +137,6 @@ function appendChildToMainStructure(childData: any): void {
 	timemark.click(function () {
 		const comment = $(this).attr("comment");
 		$("#your-time-details").text(comment);
-		$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
 	});
 
 	timemark.on("dblclick", function () {
