@@ -63,30 +63,33 @@ $url-color-hover: #333333;
         align-items: center;
 
         #votes {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
             #upvote {
+                padding: 1px;
                 width: 0;
                 height: 0;
-                border-left: 60px solid transparent;
-                border-right: 60px solid transparent;
-                border-bottom: 100px solid gray;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 8px solid gray;
             }
 
             #number {
-            font-weight: 400;
-            color: gray;
+                padding: 1px;
+                font-weight: 400;
+                color: gray;
             }
 
             #downvote {
+                transform: rotate(180deg);
+                padding: 1px;
                 width: 0;
                 height: 0;
-                border-left: 60px solid transparent;
-                border-right: 60px solid transparent;
-                border-bottom: 100px solid gray;
-                transform: rotate(180deg);
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 8px solid gray;
             }
         }
     }
