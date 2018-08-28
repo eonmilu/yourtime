@@ -68,7 +68,7 @@ $url-color-hover: #333333;
             align-items: center;
 
             #upvote {
-                padding: 1px;
+                padding: 0px 2px 0px 2px;
                 width: 0;
                 height: 0;
                 border-left: 5px solid transparent;
@@ -77,12 +77,13 @@ $url-color-hover: #333333;
             }
 
             #number {
-                padding: 1px;
+                padding: 0px 4px 0px 4px;
                 font-weight: 400;
                 color: gray;
             }
 
             #downvote {
+                padding: 0px 2px 0px 2px;
                 transform: rotate(180deg);
                 padding: 1px;
                 width: 0;
