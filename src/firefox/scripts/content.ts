@@ -151,7 +151,7 @@ function appendChildToMainStructure(childData: any): void {
 			// Set downvote gray, number and self orange
 			$(this).attr("style", "border-bottom: 8px solid orange;");
 			// Add one point
-			$("#votes #number").text(votesReceived + 1);
+			$("#votes #number").text(readablizeNumber(votesReceived + 1));
 			$("#votes #number").attr("style", "color: orange");
 			$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
 		});
@@ -162,7 +162,7 @@ function appendChildToMainStructure(childData: any): void {
 			$(this).attr("style", "border-bottom: 8px solid blue;");
 			$("#votes #number").attr("style", "color: blue");
 			// Substract one point
-			$("#votes #number").text(votesReceived - 1);
+			$("#votes #number").text(readablizeNumber(votesReceived - 1));
 			$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
 		});
 
