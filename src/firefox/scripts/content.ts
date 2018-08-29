@@ -222,24 +222,24 @@ function appendChildToMainStructure(childData: any): void {
 			id: "number"
 		}).text($(this).attr("votes"));
 
-		switch (status) {
+		switch ($(parentTimemark).attr("status")) {
 			case "upvoted":
 				// Add a vote
-				$("#votes #number").text(readablizeNumber(votesReceived + 1));
+				voteNumber.text(readablizeNumber(votesReceived + 1));
 
 				// Set downvote gray, number and self orange
-				$(this).attr("style", "border-bottom: 8px solid orange;");
-				$("#votes #number").attr("style", "color: orange");
-				$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+				upvote.attr("style", "border-bottom: 8px solid orange;");
+				voteNumber.attr("style", "color: orange");
+				downvote.attr("style", "border-bottom: 8px solid gray;");
 				break;
 			case "downvoted":
 				// Substract a vote
-				$("#votes #number").text(readablizeNumber(votesReceived - 1));
+				voteNumber.text(readablizeNumber(votesReceived - 1));
 
 				// Set upvote gray, number and self blue
-				$(this).attr("style", "border-bottom: 8px solid blue;");
-				$("#votes #number").attr("style", "color: blue");
-				$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
+				downvote.attr("style", "border-bottom: 8px solid blue;");
+				voteNumber.attr("style", "color: blue");
+				upvote.attr("style", "border-bottom: 8px solid gray;");
 				break;
 			default:
 				break;
