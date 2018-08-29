@@ -3,12 +3,13 @@ const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
 const META = JSON.parse($("meta[name='your-time-meta'").attr('content'));
 const DEFAULT_TIMEOUT = 1500;
 const EXTENSION_URL = "https://addons.mozilla.org/firefox/addon/yourtime/";
+const PLAYING = 1;
+const VOTES_URL = "https://oxygenrain.com/yourtime/votes";
 const STATUS_CODE = {
 	FOUND: "200",
 	NOT_FOUND: "210",
 	ERROR: "220"
 };
-const PLAYING = 1;
 
 const loaderIcon = $("<img/>", {
 	src: META.loaderIconURL,
@@ -129,6 +130,7 @@ function appendChildToMainStructure(childData: any): void {
 	// TODO: Horrible code, must refactor
 	const timemark = $("<div/>", {
 		class: "timemark",
+		ID: childData.id,
 		comment: childData.content,
 		votes: childData.votes,
 		seconds: childData.timemark,
@@ -156,6 +158,8 @@ function appendChildToMainStructure(childData: any): void {
 			const status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "upvoted":
+					changeServerVotes(status, $(parentTimemark).attr("ID"));
+
 					// Set vote number to default
 					$("#votes #number").text(readablizeNumber(votesReceived));
 
@@ -169,6 +173,8 @@ function appendChildToMainStructure(childData: any): void {
 					break;
 				case "unset":
 				case "downvoted":
+					changeServerVotes(status, $(parentTimemark).attr("ID"));
+
 					// Add a vote
 					$("#votes #number").text(readablizeNumber(votesReceived + 1));
 
@@ -180,6 +186,8 @@ function appendChildToMainStructure(childData: any): void {
 					$("#votes #number").attr("style", "color: orange");
 					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
 					break;
+				default:
+					break;
 			}
 		});
 		const downvote = $("<div/>", {
@@ -189,6 +197,8 @@ function appendChildToMainStructure(childData: any): void {
 			const status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "downvoted":
+					changeServerVotes(status, $(parentTimemark).attr("ID"));
+
 					// Set vote number to default
 					$("#votes #number").text(readablizeNumber(votesReceived));
 
@@ -202,6 +212,8 @@ function appendChildToMainStructure(childData: any): void {
 					break;
 				case "unset":
 				case "upvoted":
+					changeServerVotes(status, $(parentTimemark).attr("ID"));
+
 					// Substract a vote
 					$("#votes #number").text(readablizeNumber(votesReceived - 1));
 
@@ -265,6 +277,20 @@ function appendChildToMainStructure(childData: any): void {
 	);
 
 	$("#your-time-submissions").append(timemark);
+}
+
+function changeServerVotes(action: string, id: string) {
+	$.ajax({
+		method: "POST",
+		url: VOTES_URL,
+		data: {
+			id: id,
+			action: action
+		},
+		timeout: DEFAULT_TIMEOUT
+	}).done(function () {
+		console.log("Sent vote");
+	});
 }
 
 function votesToRGBA(votes: number, onHover = false) {
