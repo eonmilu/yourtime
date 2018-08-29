@@ -175,7 +175,7 @@ function appendChildToMainStructure(childData: any): void {
 
 function votesToRGBA(votes: number, onHover = false) {
 	// Anything beyond these will be considered as infinity
-	const MAX_COLOR_VOTES = 1000;
+	const MAX_COLOR_VOTES = 100;
 	const DEFAULT_TRANS = 0.6;
 
 	// Edge cases
