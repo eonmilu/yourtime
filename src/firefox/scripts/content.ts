@@ -126,6 +126,7 @@ function addMainStructure(): void {
 }
 
 function appendChildToMainStructure(childData: any): void {
+	// TODO: Horrible code, must refactor
 	const timemark = $("<div/>", {
 		class: "timemark",
 		comment: childData.content,
@@ -141,6 +142,7 @@ function appendChildToMainStructure(childData: any): void {
 		details.text(comment);
 
 		const parentTimemark = this;
+		// Get given vote number by the server
 		const votesReceived = Number($(this).attr("votes"));
 
 		const votes = $("<div/>", {
@@ -203,7 +205,7 @@ function appendChildToMainStructure(childData: any): void {
 					// Substract a vote
 					$("#votes #number").text(readablizeNumber(votesReceived - 1));
 
-					// Set parent timemarks' status to upvoted
+					// Set parent timemarks' status to downvoted
 					$(parentTimemark).attr("status", "downvoted");
 
 					// Set upvote gray, number and self blue
@@ -211,12 +213,37 @@ function appendChildToMainStructure(childData: any): void {
 					$("#votes #number").attr("style", "color: blue");
 					$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
 					break;
+				default:
+					break;
 			}
 		});
 
 		const voteNumber = $("<span/>", {
 			id: "number"
 		}).text($(this).attr("votes"));
+
+		switch (status) {
+			case "upvoted":
+				// Add a vote
+				$("#votes #number").text(readablizeNumber(votesReceived + 1));
+
+				// Set downvote gray, number and self orange
+				$(this).attr("style", "border-bottom: 8px solid orange;");
+				$("#votes #number").attr("style", "color: orange");
+				$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+				break;
+			case "downvoted":
+				// Substract a vote
+				$("#votes #number").text(readablizeNumber(votesReceived - 1));
+
+				// Set upvote gray, number and self blue
+				$(this).attr("style", "border-bottom: 8px solid blue;");
+				$("#votes #number").attr("style", "color: blue");
+				$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
+				break;
+			default:
+				break;
+		}
 
 		votes.append(upvote, voteNumber, downvote);
 		details.prepend(votes);
