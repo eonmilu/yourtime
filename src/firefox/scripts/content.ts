@@ -130,7 +130,8 @@ function appendChildToMainStructure(childData: any): void {
 		class: "timemark",
 		comment: childData.content,
 		votes: childData.votes,
-		seconds: childData.timemark
+		seconds: childData.timemark,
+		status: "unset"
 	}).text(secondsToTimestamp(childData.timemark));
 	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
@@ -139,6 +140,7 @@ function appendChildToMainStructure(childData: any): void {
 		const comment = $(this).attr("comment");
 		details.text(comment);
 
+		const parentTimemark = this;
 		const votesReceived = Number($(this).attr("votes"));
 
 		const votes = $("<div/>", {
@@ -148,22 +150,68 @@ function appendChildToMainStructure(childData: any): void {
 		const upvote = $("<div/>", {
 			id: "upvote"
 		}).click(function () {
-			// Set downvote gray, number and self orange
-			$(this).attr("style", "border-bottom: 8px solid orange;");
-			// Add one point
-			$("#votes #number").text(readablizeNumber(votesReceived + 1));
-			$("#votes #number").attr("style", "color: orange");
-			$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+			// Read the status (upvoted, unset, downvoted)
+			const status = $(parentTimemark).attr("status");
+			switch (status) {
+				case "upvoted":
+					// Set vote number to default
+					$("#votes #number").text(readablizeNumber(votesReceived));
+
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+
+					// Set everything gray
+					$(this).attr("style", "border-bottom: 8px solid gray;");
+					$("#votes #number").attr("style", "color: gray");
+					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+				case "unset":
+				case "downvoted":
+					// Add a vote
+					$("#votes #number").text(readablizeNumber(votesReceived + 1));
+
+					// Set parent timemarks' status to upvoted
+					$(parentTimemark).attr("status", "upvoted");
+
+					// Set downvote gray, number and self orange
+					$(this).attr("style", "border-bottom: 8px solid orange;");
+					$("#votes #number").attr("style", "color: orange");
+					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+			}
 		});
 		const downvote = $("<div/>", {
 			id: "downvote"
 		}).click(function () {
-			// Set upvote gray, number and self blue
-			$(this).attr("style", "border-bottom: 8px solid blue;");
-			$("#votes #number").attr("style", "color: blue");
-			// Substract one point
-			$("#votes #number").text(readablizeNumber(votesReceived - 1));
-			$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
+			// Read the status (upvoted, unset, downvoted)
+			const status = $(parentTimemark).attr("status");
+			switch (status) {
+				case "downvoted":
+					// Set vote number to default
+					$("#votes #number").text(readablizeNumber(votesReceived));
+
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+
+					// Set everything gray
+					$(this).attr("style", "border-bottom: 8px solid gray;");
+					$("#votes #number").attr("style", "color: gray");
+					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+				case "unset":
+				case "upvoted":
+					// Substract a vote
+					$("#votes #number").text(readablizeNumber(votesReceived - 1));
+
+					// Set parent timemarks' status to upvoted
+					$(parentTimemark).attr("status", "downvoted");
+
+					// Set upvote gray, number and self blue
+					$(this).attr("style", "border-bottom: 8px solid blue;");
+					$("#votes #number").attr("style", "color: blue");
+					$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+			}
 		});
 
 		const voteNumber = $("<span/>", {
