@@ -22,6 +22,3 @@ yourtime: scripts/* ../common/*
 	cp ../node_modules/jquery/LICENSE.txt ../../build/firefox/LEGAL/THIRD_PARTIES/jquery
 	# Move popup.js to the popup folder
 	mv ../../build/firefox/scripts/popup.js ../../build/firefox/popup/popup.js
-	# Clean up
-	rm -rf ../../build/firefox/resources/stylesheet.css.map ../../build/firefox/resources/stylesheet.scss
-	rm -rf ../../build/firefox/popup/popup.css.map ../../build/firefox/popup/popup.scss

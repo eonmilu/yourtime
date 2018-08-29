@@ -126,30 +126,124 @@ function addMainStructure(): void {
 }
 
 function appendChildToMainStructure(childData: any): void {
+	// TODO: Horrible code, must refactor
 	const timemark = $("<div/>", {
 		class: "timemark",
 		comment: childData.content,
 		votes: childData.votes,
-		seconds: childData.timemark
+		seconds: childData.timemark,
+		status: "unset"
 	}).text(secondsToTimestamp(childData.timemark));
 	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
 
 	timemark.click(function () {
 		const details = $("#your-time-details");
 		const comment = $(this).attr("comment");
-
 		details.text(comment);
+
+		const parentTimemark = this;
+		// Get given vote number by the server
+		const votesReceived = Number($(this).attr("votes"));
 
 		const votes = $("<div/>", {
 			id: "votes"
 		});
 
-		const upvote = $("<div/>", {id: "upvote"});
-		const downvote = $("<div/>", {id: "downvote"});
+		const upvote = $("<div/>", {
+			id: "upvote"
+		}).click(function () {
+			// Read the status (upvoted, unset, downvoted)
+			const status = $(parentTimemark).attr("status");
+			switch (status) {
+				case "upvoted":
+					// Set vote number to default
+					$("#votes #number").text(readablizeNumber(votesReceived));
+
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+
+					// Set everything gray
+					$(this).attr("style", "border-bottom: 8px solid gray;");
+					$("#votes #number").attr("style", "color: gray");
+					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+				case "unset":
+				case "downvoted":
+					// Add a vote
+					$("#votes #number").text(readablizeNumber(votesReceived + 1));
+
+					// Set parent timemarks' status to upvoted
+					$(parentTimemark).attr("status", "upvoted");
+
+					// Set downvote gray, number and self orange
+					$(this).attr("style", "border-bottom: 8px solid orange;");
+					$("#votes #number").attr("style", "color: orange");
+					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+			}
+		});
+		const downvote = $("<div/>", {
+			id: "downvote"
+		}).click(function () {
+			// Read the status (upvoted, unset, downvoted)
+			const status = $(parentTimemark).attr("status");
+			switch (status) {
+				case "downvoted":
+					// Set vote number to default
+					$("#votes #number").text(readablizeNumber(votesReceived));
+
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+
+					// Set everything gray
+					$(this).attr("style", "border-bottom: 8px solid gray;");
+					$("#votes #number").attr("style", "color: gray");
+					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+				case "unset":
+				case "upvoted":
+					// Substract a vote
+					$("#votes #number").text(readablizeNumber(votesReceived - 1));
+
+					// Set parent timemarks' status to downvoted
+					$(parentTimemark).attr("status", "downvoted");
+
+					// Set upvote gray, number and self blue
+					$(this).attr("style", "border-bottom: 8px solid blue;");
+					$("#votes #number").attr("style", "color: blue");
+					$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+				default:
+					break;
+			}
+		});
 
 		const voteNumber = $("<span/>", {
 			id: "number"
 		}).text($(this).attr("votes"));
+
+		switch ($(parentTimemark).attr("status")) {
+			case "upvoted":
+				// Add a vote
+				voteNumber.text(readablizeNumber(votesReceived + 1));
+
+				// Set downvote gray, number and self orange
+				upvote.attr("style", "border-bottom: 8px solid orange;");
+				voteNumber.attr("style", "color: orange");
+				downvote.attr("style", "border-bottom: 8px solid gray;");
+				break;
+			case "downvoted":
+				// Substract a vote
+				voteNumber.text(readablizeNumber(votesReceived - 1));
+
+				// Set upvote gray, number and self blue
+				downvote.attr("style", "border-bottom: 8px solid blue;");
+				voteNumber.attr("style", "color: blue");
+				upvote.attr("style", "border-bottom: 8px solid gray;");
+				break;
+			default:
+				break;
+		}
 
 		votes.append(upvote, voteNumber, downvote);
 		details.prepend(votes);
