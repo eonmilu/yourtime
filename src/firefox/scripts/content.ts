@@ -220,7 +220,7 @@ function appendChildToMainStructure(childData: any): void {
 
 		const voteNumber = $("<span/>", {
 			id: "number"
-		}).text($(this).attr("votes"));
+		}).text(readablizeNumber(Number($(this).attr("votes"))));
 
 		switch ($(parentTimemark).attr("status")) {
 			case "upvoted":
