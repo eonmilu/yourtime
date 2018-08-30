@@ -158,13 +158,13 @@ function appendChildToMainStructure(childData: any): void {
 			const status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "upvoted":
-					changeServerVotes(status, $(parentTimemark).attr("ID"));
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
 
 					// Set vote number to default
 					$("#votes #number").text(readablizeNumber(votesReceived));
 
-					// Set parent timemarks' status to unset
-					$(parentTimemark).attr("status", "unset");
 
 					// Set everything gray
 					$(this).attr("style", "border-bottom: 8px solid gray;");
@@ -173,13 +173,13 @@ function appendChildToMainStructure(childData: any): void {
 					break;
 				case "unset":
 				case "downvoted":
-					changeServerVotes(status, $(parentTimemark).attr("ID"));
+					// Set parent timemarks' status to upvoted
+					$(parentTimemark).attr("status", "upvoted");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
 
 					// Add a vote
 					$("#votes #number").text(readablizeNumber(votesReceived + 1));
 
-					// Set parent timemarks' status to upvoted
-					$(parentTimemark).attr("status", "upvoted");
 
 					// Set downvote gray, number and self orange
 					$(this).attr("style", "border-bottom: 8px solid orange;");
@@ -197,13 +197,13 @@ function appendChildToMainStructure(childData: any): void {
 			const status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "downvoted":
-					changeServerVotes(status, $(parentTimemark).attr("ID"));
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
 
 					// Set vote number to default
 					$("#votes #number").text(readablizeNumber(votesReceived));
 
-					// Set parent timemarks' status to unset
-					$(parentTimemark).attr("status", "unset");
 
 					// Set everything gray
 					$(this).attr("style", "border-bottom: 8px solid gray;");
@@ -212,13 +212,13 @@ function appendChildToMainStructure(childData: any): void {
 					break;
 				case "unset":
 				case "upvoted":
-					changeServerVotes(status, $(parentTimemark).attr("ID"));
+					// Set parent timemarks' status to downvoted
+					$(parentTimemark).attr("status", "downvoted");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
 
 					// Substract a vote
 					$("#votes #number").text(readablizeNumber(votesReceived - 1));
 
-					// Set parent timemarks' status to downvoted
-					$(parentTimemark).attr("status", "downvoted");
 
 					// Set upvote gray, number and self blue
 					$(this).attr("style", "border-bottom: 8px solid blue;");
