@@ -3,12 +3,13 @@ const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
 const META = JSON.parse($("meta[name='your-time-meta'").attr('content'));
 const DEFAULT_TIMEOUT = 1500;
 const EXTENSION_URL = "https://addons.mozilla.org/firefox/addon/yourtime/";
+const PLAYING = 1;
+const VOTES_URL = "https://oxygenrain.com/yourtime/votes";
 const STATUS_CODE = {
 	FOUND: "200",
 	NOT_FOUND: "210",
 	ERROR: "220"
 };
-const PLAYING = 1;
 
 const loaderIcon = $("<img/>", {
 	src: META.loaderIconURL,
@@ -129,6 +130,7 @@ function appendChildToMainStructure(childData: any): void {
 	// TODO: Horrible code, must refactor
 	const timemark = $("<div/>", {
 		class: "timemark",
+		ID: childData.id,
 		comment: childData.content,
 		votes: childData.votes,
 		seconds: childData.timemark,
@@ -156,11 +158,13 @@ function appendChildToMainStructure(childData: any): void {
 			const status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "upvoted":
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
+
 					// Set vote number to default
 					$("#votes #number").text(readablizeNumber(votesReceived));
 
-					// Set parent timemarks' status to unset
-					$(parentTimemark).attr("status", "unset");
 
 					// Set everything gray
 					$(this).attr("style", "border-bottom: 8px solid gray;");
@@ -169,16 +173,20 @@ function appendChildToMainStructure(childData: any): void {
 					break;
 				case "unset":
 				case "downvoted":
+					// Set parent timemarks' status to upvoted
+					$(parentTimemark).attr("status", "upvoted");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
+
 					// Add a vote
 					$("#votes #number").text(readablizeNumber(votesReceived + 1));
 
-					// Set parent timemarks' status to upvoted
-					$(parentTimemark).attr("status", "upvoted");
 
 					// Set downvote gray, number and self orange
 					$(this).attr("style", "border-bottom: 8px solid orange;");
 					$("#votes #number").attr("style", "color: orange");
 					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
+					break;
+				default:
 					break;
 			}
 		});
@@ -189,11 +197,13 @@ function appendChildToMainStructure(childData: any): void {
 			const status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "downvoted":
+					// Set parent timemarks' status to unset
+					$(parentTimemark).attr("status", "unset");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
+
 					// Set vote number to default
 					$("#votes #number").text(readablizeNumber(votesReceived));
 
-					// Set parent timemarks' status to unset
-					$(parentTimemark).attr("status", "unset");
 
 					// Set everything gray
 					$(this).attr("style", "border-bottom: 8px solid gray;");
@@ -202,11 +212,13 @@ function appendChildToMainStructure(childData: any): void {
 					break;
 				case "unset":
 				case "upvoted":
+					// Set parent timemarks' status to downvoted
+					$(parentTimemark).attr("status", "downvoted");
+					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
+
 					// Substract a vote
 					$("#votes #number").text(readablizeNumber(votesReceived - 1));
 
-					// Set parent timemarks' status to downvoted
-					$(parentTimemark).attr("status", "downvoted");
 
 					// Set upvote gray, number and self blue
 					$(this).attr("style", "border-bottom: 8px solid blue;");
@@ -265,6 +277,20 @@ function appendChildToMainStructure(childData: any): void {
 	);
 
 	$("#your-time-submissions").append(timemark);
+}
+
+function changeServerVotes(action: string, id: string) {
+	$.ajax({
+		method: "POST",
+		url: VOTES_URL,
+		data: {
+			id: id,
+			action: action
+		},
+		timeout: DEFAULT_TIMEOUT
+	}).done(function () {
+		console.log("Sent vote");
+	});
 }
 
 function votesToRGBA(votes: number, onHover = false) {
