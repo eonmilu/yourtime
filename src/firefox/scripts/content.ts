@@ -73,7 +73,7 @@ function ensureStateChange() {
 	player.playVideo();
 }
 
-// Transform seconds to ((days):(hours):)minutes:seconds
+// Transform seconds to [(days):(hours):]minutes:seconds
 function secondsToTimestamp(seconds: any): string {
 	// Ignore negative seconds and types other than number
 	if (seconds < 0 || typeof seconds != "number")
