@@ -1,3 +1,4 @@
+declare var browser: any;
 const META_ELEMENT_INTERVAL = 10;
 
 const intervailIDToken = setInterval(function () {

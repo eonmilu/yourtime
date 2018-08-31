@@ -1,3 +1,4 @@
+declare var browser: any;
 const LOG_IN_URL = "https://oxygenrain.com/yourtime/auth/google.html";
 
 browser.storage.local.get("yourtimeauth")
