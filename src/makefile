@@ -13,14 +13,17 @@ yourtime: $(target)/scripts/* common/*
 
 	# Copy licenses
 	cp node_modules/@types/jquery/LICENSE $(dir)/LEGAL/THIRD_PARTIES/tsjquery
-	cp node_modules/jquery/LICENSE.txt $(dir)/LEGAL/THIRD_PARTIES/jquery
+	cp node_modules/jquery/LICENSE.txt    $(dir)/LEGAL/THIRD_PARTIES/jquery
 
 	# Compile TypeScript
-	tsc
+	tsc --outFile $(dir)/scripts/scriptloader.ts $(target)/scripts/scriptloader_ts/*
+	tsc --outFile $(dir)/scripts/oxygenrain.ts   $(target)/scripts/oxygenrain_ts/*
+	tsc --outFile $(dir)/scripts/content.ts      $(target)/scripts/content_ts/*
+	tsc --outFile $(dir)/scripts/popup.ts        $(target)/scripts/popup_ts/*
 
 	# Compile SCSS
 	sass common/resources/stylesheet.scss $(dir)/resources/stylesheet.css
-	sass common/popup/popup.scss $(dir)/popup/popup.css
+	sass common/popup/popup.scss 		  $(dir)/popup/popup.css
 
 	# Copy manifest and libraries
 	cp $(target)/manifest.json $(dir)/
