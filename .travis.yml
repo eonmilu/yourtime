@@ -4,4 +4,4 @@ before_script:
   - cd src/
   - npm install @types/jquery
   - npm install jquery
-script: cd firefox/ && make
+script: make target=firefox
