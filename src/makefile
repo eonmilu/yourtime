@@ -16,10 +16,10 @@ yourtime: $(target)/scripts/* common/*
 	cp node_modules/jquery/LICENSE.txt    $(dir)/LEGAL/THIRD_PARTIES/jquery
 
 	# Compile TypeScript
-	tsc --outFile $(dir)/scripts/scriptloader.ts $(target)/scripts/scriptloader_ts/*
-	tsc --outFile $(dir)/scripts/oxygenrain.ts   $(target)/scripts/oxygenrain_ts/*
-	tsc --outFile $(dir)/scripts/content.ts      $(target)/scripts/content_ts/*
-	tsc --outFile $(dir)/scripts/popup.ts        $(target)/scripts/popup_ts/*
+	tsc --outFile $(dir)/scripts/scriptloader.js $(target)/scripts/scriptloader_ts/*
+	tsc --outFile $(dir)/scripts/oxygenrain.js   $(target)/scripts/oxygenrain_ts/*
+	tsc --outFile $(dir)/scripts/content.js      $(target)/scripts/content_ts/*
+	tsc --outFile $(dir)/scripts/popup.js        $(target)/scripts/popup_ts/*
 
 	# Compile SCSS
 	sass common/resources/stylesheet.scss $(dir)/resources/stylesheet.css
@@ -31,3 +31,7 @@ yourtime: $(target)/scripts/* common/*
 
 	# Move popup.js from scripts/ to popup/
 	mv $(dir)/scripts/popup.js $(dir)/popup/popup.js
+
+	# Cleanup
+	rm $(dir)/popup/popup.css.map $(dir)/popup/popup.scss
+	rm $(dir)/resources/stylesheet.css.map $(dir)/resources/stylesheet.scss
