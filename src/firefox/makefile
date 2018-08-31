@@ -1,26 +1,30 @@
+buildDir = ../../build
+target = firefox # Default build to firefox
+dir = "$(buildDir)/$(target)"
+
 yourtime: scripts/* ../common/*
-	# Make new build/firefox
-	mkdir -p ../../build
-	rm -rf ../../build/firefox
-	mkdir ../../build/firefox
+	# Make new build/$(target)
+	mkdir -p $(buildDir)
+	rm -rf $(dir)
+	mkdir $(dir)
 
 	# Copy common resources
-	cp -rf ../common/* ../../build/firefox/
+	cp -rf ../common/* $(dir)/
 
 	# Copy licenses
-	cp ../node_modules/@types/jquery/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/tsjquery
-	cp ../node_modules/jquery/LICENSE.txt ../../build/firefox/LEGAL/THIRD_PARTIES/jquery
+	cp ../node_modules/@types/jquery/LICENSE $(dir)/LEGAL/THIRD_PARTIES/tsjquery
+	cp ../node_modules/jquery/LICENSE.txt $(dir)/LEGAL/THIRD_PARTIES/jquery
 
 	# Compile TypeScript
 	tsc
 
 	# Compile SCSS
-	sass ../common/resources/stylesheet.scss ../../build/firefox/resources/stylesheet.css
-	sass ../common/popup/popup.scss ../../build/firefox/popup/popup.css
+	sass ../common/resources/stylesheet.scss $(dir)/resources/stylesheet.css
+	sass ../common/popup/popup.scss $(dir)/popup/popup.css
 
 	# Copy manifest and libraries
-	cp manifest.json ../../build/firefox/
-	cp ../node_modules/jquery/dist/jquery.min.js ../../build/firefox/scripts/jquery.min.js
+	cp manifest.json $(dir)/
+	cp ../node_modules/jquery/dist/jquery.min.js $(dir)/scripts/jquery.min.js
 
 	# Move popup.js from scripts/ to popup/
-	mv ../../build/firefox/scripts/popup.js ../../build/firefox/popup/popup.js
+	mv $(dir)/scripts/popup.js $(dir)/popup/popup.js
