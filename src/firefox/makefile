@@ -1,24 +1,26 @@
 yourtime: scripts/* ../common/*
-	# Create build directory if it does not exist
+	# Make new build/firefox
 	mkdir -p ../../build
-	# Delete the previous Firefox build if it exists
 	rm -rf ../../build/firefox
-	# Create an empty Firefox directory
-	mkdir -p ../../build/firefox
-	# Copy all common files and folders to the new directory
+	mkdir ../../build/firefox
+
+	# Copy common resources
 	cp -rf ../common/* ../../build/firefox/
-	# Copy bundled manifest.json to build directory
-	cp manifest.json ../../build/firefox/
-	# Compile SCSS to the resource folder in the build directory
-	sass ../common/resources/stylesheet.scss ../../build/firefox/resources/stylesheet.css
-	# Compile SCSS to the popup folder in the build directory
-	sass ../common/popup/popup.scss ../../build/firefox/popup/popup.css
-	# Compile TS files using tsconfig.json
-	tsc
-	# Copy jQuery from node_modules
-	cp ../node_modules/jquery/dist/jquery.min.js ../../build/firefox/scripts/jquery.min.js
-	# Copy third party licenses
+
+	# Copy licenses
 	cp ../node_modules/@types/jquery/LICENSE ../../build/firefox/LEGAL/THIRD_PARTIES/tsjquery
 	cp ../node_modules/jquery/LICENSE.txt ../../build/firefox/LEGAL/THIRD_PARTIES/jquery
-	# Move popup.js to the popup folder
+
+	# Compile TypeScript
+	tsc
+
+	# Compile SCSS
+	sass ../common/resources/stylesheet.scss ../../build/firefox/resources/stylesheet.css
+	sass ../common/popup/popup.scss ../../build/firefox/popup/popup.css
+
+	# Copy manifest and libraries
+	cp manifest.json ../../build/firefox/
+	cp ../node_modules/jquery/dist/jquery.min.js ../../build/firefox/scripts/jquery.min.js
+
+	# Move popup.js from scripts/ to popup/
 	mv ../../build/firefox/scripts/popup.js ../../build/firefox/popup/popup.js
