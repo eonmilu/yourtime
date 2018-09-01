@@ -27,7 +27,7 @@ yourtime: $(target)/scripts/* common/*
 
 	# Copy manifest and libraries
 	cp $(target)/manifest.json $(dir)/
-	cp node_modules/jquery/dist/jquery.min.js $(dir)/scripts/jquery.min.js
+	cp node_modules/jquery/dist/jquery.js $(dir)/scripts/jquery.min.js
 
 	# Move popup.js from scripts/ to popup/
 	mv $(dir)/scripts/popup.js $(dir)/popup/popup.js
