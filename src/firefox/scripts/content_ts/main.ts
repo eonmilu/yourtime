@@ -1,4 +1,16 @@
-appendLoader();
+const SELECT_URL = "https://oxygenrain.com/yourtime/search";
+const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
+const META = JSON.parse($("meta[name='your-time-meta'").attr('content'));
+const DEFAULT_TIMEOUT = 1500;
+const EXTENSION_URL = "https://addons.mozilla.org/firefox/addon/yourtime/";
+const PLAYING = 1;
+const VOTES_URL = "https://oxygenrain.com/yourtime/votes";
+const STATUS_CODE = {
+	FOUND: "200",
+	NOT_FOUND: "210",
+	ERROR: "220"
+};
+
 
 var lastId = "";
 var videoID = getCurrentVideoID();
@@ -12,17 +24,12 @@ player.addEventListener("onStateChange", (statusInteger: Number) => {
 	videoID = getCurrentVideoID();
 	if (statusInteger == PLAYING && lastId != videoID) {
 		lastId = videoID;
-		loaderIcon.appendTo($("#info-contents"));
+		appendLoader();
 		onLayoutLoaded();
 	}
 });
 
 ensureStateChange();
-
-function getCurrentVideoID(): string {
-	const id = window.location.href.match(/v=([^&]*)/)[1];
-	return id;
-}
 
 function ensureStateChange() {
 	// HACK: Make sure the pause/play event is fired
@@ -30,27 +37,7 @@ function ensureStateChange() {
 	player.playVideo();
 }
 
-function changeServerVotes(action: string, id: string) {
-	$.ajax({
-		method: "POST",
-		url: VOTES_URL,
-		data: {
-			id: id,
-			action: action
-		},
-		timeout: DEFAULT_TIMEOUT
-	}).done(function () {
-		console.log("Sent vote");
-	});
-}
-
-// Parse and add the response to the DOM
-function processResponse(statusCode: string, rawResponse: string): void {
-	if (statusCode == STATUS_CODE.FOUND) {
-		const response = JSON.parse(rawResponse);
-		response.forEach(appendChildToMainStructure);
-		addDetailsDiv();
-	} else {
-		addError(statusCode);
-	}
+function getCurrentVideoID(): string {
+	const id = window.location.href.match(/v=([^&]*)/)[1];
+	return id;
 }
