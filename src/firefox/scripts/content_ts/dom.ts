@@ -2,10 +2,12 @@ function onLayoutLoaded(): void {
 	removeMainStructure();
 	$.ajax({
 		method: "GET",
-		url: SELECT_URL,
+		url: SelectURL,
 		dataType: "text",
-		data: { v: videoID },
-		timeout: DEFAULT_TIMEOUT,
+		data: {
+			v: videoID
+		},
+		timeout: DefaultTimeout,
 	}).always(() => {
 		addMainStructure();
 		$("#your-time-loader").remove();
@@ -22,12 +24,10 @@ function onLayoutLoaded(): void {
 	});
 }
 
-
 function addMainStructure(): void {
 	const yourtime = $("<div/>", {
 		id: "your-time"
 	});
-
 	const submissions = $("<div/>", {
 		id: "your-time-submissions"
 	});
@@ -36,17 +36,83 @@ function addMainStructure(): void {
 	yourtime.appendTo("#info-contents");
 }
 
-function appendChildToMainStructure(childData: any): void {
+// Parse and add the response to the DOM
+function processResponse(statusCode: string, response: string): void {
+	if (statusCode == StatusCodes.Found) {
+		const timemarks = JSON.parse(response);
+		timemarks.forEach(appendTimemarkToMainStructure);
+		addDetailsDiv();
+	} else {
+		addError(statusCode);
+	}
+}
+
+function appendTimemarkToMainStructure(timemarkData: any): void {
 	// TODO: Horrible code, must refactor
+	const timemark = getTimemark(timemarkData);
+
+	$("#your-time-submissions").append(timemark);
+}
+
+function addDetailsDiv() {
+	const details = $("<div/>", {
+		id: "your-time-details"
+	}).text("Click on one of above's timemarks to see it's content. Click twice to be taken to that timemark.");
+
+	details.appendTo("#your-time");
+}
+
+function addError(statusCode: string) {
+	const yourtimeError = $("<div/>", {
+		id: "your-time-error"
+	});
+
+	var main = $("<span/>", {
+		class: "main-text"
+	});
+	var secondary = $("<a/>", {
+		class: "secondary-text",
+	});
+
+	switch (statusCode) {
+		case StatusCodes.NotFound:
+			main.text("Your Time didn't find any timemarks for this video.");
+			secondary.text("Submit your own.");
+			secondary.click(createTimemark);
+			break;
+		case StatusCodes.Error:
+			main.text("Your Time could not connect to the server.");
+			secondary.text("Try again later.");
+			secondary.click(null);
+			break;
+		default:
+			main.text("Unknown status code.");
+			secondary.text("Are you using the latest Your Time version?")
+			secondary.click(() => {
+				window.open(ExtensionURL, "_blank").focus();
+			});
+			break;
+	}
+
+	yourtimeError.append(
+		main,
+		secondary
+	);
+
+	yourtimeError.appendTo($("#your-time"));
+	$("#your-time").show()
+}
+
+function getTimemark(timemarkData: any): any {
 	const timemark = $("<div/>", {
 		class: "timemark",
-		ID: childData.id,
-		comment: childData.content,
-		votes: childData.votes,
-		seconds: childData.timemark,
+		ID: timemarkData.id,
+		comment: timemarkData.content,
+		votes: timemarkData.votes,
+		seconds: timemarkData.timemark,
 		status: "unset"
-	}).text(secondsToTimestamp(childData.timemark));
-	timemark.attr("style", `background-color: ${votesToRGBA(childData.votes)}`);
+	}).text(secondsToTimestamp(timemarkData.timemark));
+	timemark.attr("style", `background-color: ${votesToRGBA(timemarkData.votes)}`);
 
 	timemark.click(function () {
 		const details = $("#your-time-details");
@@ -65,7 +131,7 @@ function appendChildToMainStructure(childData: any): void {
 			id: "upvote"
 		}).click(function () {
 			// Read the status (upvoted, unset, downvoted)
-			const status = $(parentTimemark).attr("status");
+			const Status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "upvoted":
 					// Set parent timemarks' status to unset
@@ -104,7 +170,7 @@ function appendChildToMainStructure(childData: any): void {
 			id: "downvote"
 		}).click(function () {
 			// Read the status (upvoted, unset, downvoted)
-			const status = $(parentTimemark).attr("status");
+			const Status = $(parentTimemark).attr("status");
 			switch (status) {
 				case "downvoted":
 					// Set parent timemarks' status to unset
@@ -170,7 +236,7 @@ function appendChildToMainStructure(childData: any): void {
 		votes.append(upvote, voteNumber, downvote);
 		details.prepend(votes);
 
-		$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
+		$(this).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, true)}`);
 	});
 
 	timemark.on("dblclick", function () {
@@ -179,64 +245,15 @@ function appendChildToMainStructure(childData: any): void {
 
 	timemark.hover(
 		function () {
-			$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, true)}`);
+			$(this).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, true)}`);
 		},
 		function () {
-			$(this).attr("style", `background-color: ${votesToRGBA(childData.votes, false)}`);
+			$(this).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, false)}`);
 		}
 	);
 
-	$("#your-time-submissions").append(timemark);
-}
 
-function addDetailsDiv() {
-	const details = $("<div/>", {
-		id: "your-time-details"
-	}).text("Click on one of above's timemarks to see it's content. Click twice to be taken to that timemark.");
-
-	details.appendTo("#your-time");
-}
-
-function addError(statusCode: string) {
-	const yourtimeError = $("<div/>", {
-		id: "your-time-error"
-	});
-
-	var main = $("<span/>", {
-		class: "main-text"
-	});
-	var secondary = $("<a/>", {
-		class: "secondary-text",
-	});
-
-	switch (statusCode) {
-		case STATUS_CODE.NOT_FOUND:
-			main.text("Your Time didn't find any timemarks for this video.");
-			secondary.text("Submit your own.");
-			secondary.click(createTimemark);
-			break;
-		case STATUS_CODE.ERROR:
-			main.text("Your Time could not connect to the server.");
-			secondary.text("Try again later.");
-			secondary.click(null);
-			break;
-		default:
-			main.text("Unknown status code.");
-			secondary.text("Are you using the latest Your Time version?")
-			secondary.click(() => {
-				const win = window.open(EXTENSION_URL, "_blank");
-				win.focus();
-			});
-			break;
-	}
-
-	yourtimeError.append(
-		main,
-		secondary
-	);
-
-	yourtimeError.appendTo($("#your-time"));
-	$("#your-time").show()
+	return timemark
 }
 
 function createTimemark() {
@@ -250,10 +267,24 @@ function removeMainStructure(): void {
 }
 
 function appendLoader(): void {
-	const loaderIcon = $("<img/>", {
-		src: META.loaderIconURL,
+	const LoaderIcon = $("<img/>", {
+		src: Meta.loaderIconURL,
 		id: "your-time-loader",
 		style: "display: block; margin: auto; margin-top: 5px;"
 	}).height("25px");
-	loaderIcon.appendTo($("#info-contents"));
+	LoaderIcon.appendTo($("#info-contents"));
+}
+
+function changeServerVotes(action: string, id: string) {
+	$.ajax({
+		method: "POST",
+		url: VotesURL,
+		data: {
+			id: id,
+			action: action
+		},
+		timeout: DefaultTimeout
+	}).done(function () {
+		console.log("Sent vote");
+	});
 }

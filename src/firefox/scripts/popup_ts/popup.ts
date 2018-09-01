@@ -1,5 +1,5 @@
 declare var browser: any;
-const LOG_IN_URL = "https://oxygenrain.com/yourtime/auth/google.html";
+const LogInURL = "https://oxygenrain.com/yourtime/auth/google.html";
 
 browser.storage.local.get("yourtimeauth")
 	.then((content) => {
@@ -15,6 +15,5 @@ browser.storage.local.get("yourtimeauth")
 	});
 
 function logOut() {
-	const win = window.open(LOG_IN_URL, "_blank");
-	win.focus();
+	window.open(LogInURL, "_blank").focus();
 }

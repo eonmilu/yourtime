@@ -1,22 +1,22 @@
 function votesToRGBA(votes: number, onHover = false) {
 	// Anything beyond these will be considered as infinity
-	const MAX_COLOR_VOTES = 100;
-	const DEFAULT_TRANS = 0.6;
+	const MaxColorVotes = 100;
+	const DefTransparency = 0.6;
 
 	// Edge cases
 	if (votes == 0) {
 		if (onHover) {
-			return `rgba(200, 200, 200, ${DEFAULT_TRANS - 0.2})`;
+			return `rgba(200, 200, 200, ${DefTransparency - 0.2})`;
 		}
-		return `rgba(255, 255, 255, ${DEFAULT_TRANS})`;
+		return `rgba(255, 255, 255, ${DefTransparency})`;
 	}
 
-	const isNegative = votes < 0;
-	const absValue = Math.log(Math.abs(votes)) / Math.log(MAX_COLOR_VOTES);
-	var trueValue = absValue > 0.6 ? 0.6 : absValue;
+	const IsNegative = votes < 0;
+	const AbsTransparency = Math.log(Math.abs(votes)) / Math.log(MaxColorVotes);
+	var trueTransparency = AbsTransparency > 0.6 ? 0.6 : AbsTransparency;
 
 	var redValue, greenValue, blueValue;
-	if (isNegative) {
+	if (IsNegative) {
 		redValue = 40;
 		greenValue = 120;
 		blueValue = 240;
@@ -27,10 +27,10 @@ function votesToRGBA(votes: number, onHover = false) {
 	}
 
 	if (onHover) {
-		trueValue += 0.3;
+		trueTransparency += 0.3;
 	}
 
-	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${trueValue})`;
+	return `rgba(${redValue}, ${greenValue}, ${blueValue}, ${trueTransparency})`;
 }
 
 // Transform seconds to [(days):(hours):]minutes:seconds
@@ -48,10 +48,10 @@ function secondsToTimestamp(seconds: any): string {
 
 	ensureTwoDigits();
 
-	const time = `${days}:${hours}:${minutes}:${seconds}`;
+	const Time = `${days}:${hours}:${minutes}:${seconds}`;
 
 	// Remove unnecessary "00:"s, keeping the last two for formatting
-	return time.replace(/^(00\:){1,2}/gm, "");
+	return Time.replace(/^(00\:){1,2}/gm, "");
 
 	function ensureTwoDigits() {
 		if (days < 10)

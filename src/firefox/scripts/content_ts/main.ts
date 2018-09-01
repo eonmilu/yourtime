@@ -1,14 +1,14 @@
-const SELECT_URL = "https://oxygenrain.com/yourtime/search";
-const INSERT_URL = "https://oxygenrain.com/yourtime/insert";
-const META = JSON.parse($("meta[name='your-time-meta'").attr('content'));
-const DEFAULT_TIMEOUT = 1500;
-const EXTENSION_URL = "https://addons.mozilla.org/firefox/addon/yourtime/";
-const PLAYING = 1;
-const VOTES_URL = "https://oxygenrain.com/yourtime/votes";
-const STATUS_CODE = {
-	FOUND: "200",
-	NOT_FOUND: "210",
-	ERROR: "220"
+const SelectURL = "https://oxygenrain.com/yourtime/search";
+const InsertURL = "https://oxygenrain.com/yourtime/insert";
+const ExtensionURL = "https://addons.mozilla.org/firefox/addon/yourtime/";
+const VotesURL = "https://oxygenrain.com/yourtime/votes";
+const Meta = JSON.parse($("meta[name='your-time-meta'").attr('content'));
+const DefaultTimeout = 1500;
+const Playing = 1;
+const StatusCodes = {
+	Found: "200",
+	NotFound: "210",
+	Error: "220"
 };
 
 
@@ -20,9 +20,9 @@ player.addEventListener("onStateChange", (statusInteger: Number) => {
 	// https://developers.google.com/youtube/iframe_api_reference#Events
 	// The UNSTARTED or CUED status should be used.
 	// However, YouTube's IFrame Player API is unreliable,
-	// so we shall use PLAYING and check if the timemarks have been loaded
+	// so we shall use Playing and check if the timemarks have been loaded
 	videoID = getCurrentVideoID();
-	if (statusInteger == PLAYING && lastId != videoID) {
+	if (statusInteger == Playing && lastId != videoID) {
 		lastId = videoID;
 		appendLoader();
 		onLayoutLoaded();
