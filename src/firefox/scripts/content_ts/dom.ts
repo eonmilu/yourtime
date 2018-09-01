@@ -40,17 +40,12 @@ function addMainStructure(): void {
 function processResponse(statusCode: string, response: string): void {
 	if (statusCode == StatusCodes.Found) {
 		const timemarks = JSON.parse(response);
-		timemarks.map .forEach(appendTimemarkToMainStructure);
+		// Get timemark from data and append it to main structure
+		timemarks.map(getTimemark).forEach($("#your-time-submissions").append);
 		addDetailsDiv();
 	} else {
 		addError(statusCode);
 	}
-}
-
-function appendTimemarkToMainStructure(timemarkData: any): void {
-	const timemark = getTimemark(timemarkData);
-
-	$("#your-time-submissions").append(timemark);
 }
 
 function addDetailsDiv() {
