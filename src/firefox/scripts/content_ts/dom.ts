@@ -20,7 +20,8 @@ function onLayoutLoaded(): void {
 		processResponse(statusCode, response);
 	}).fail((jqXHR, textStatus, error) => {
 		console.log(jqXHR, textStatus, error);
-		addError("220");
+		const errors = getErrors(StatusCodes.Error);
+		addErrors(errors);
 	});
 }
 
@@ -44,7 +45,8 @@ function processResponse(statusCode: string, response: string): void {
 		timemarks.map(getTimemark).forEach($("#your-time-submissions").append);
 		addDetailsDiv();
 	} else {
-		addError(statusCode);
+		const errors = getErrors(statusCode);
+		addErrors(errors);
 	}
 }
 
@@ -56,16 +58,14 @@ function addDetailsDiv() {
 	details.appendTo("#your-time");
 }
 
-function addError(statusCode: string) {
+function addErrors({ main, secondary }) {
 	const yourtimeError = $("<div/>", {
 		id: "your-time-error"
 	});
 
-	const errors = getErrors(statusCode);
-
 	yourtimeError.append(
-		errors.main,
-		errors.secondary
+		main,
+		secondary
 	);
 
 	yourtimeError.appendTo($("#your-time"));
@@ -73,35 +73,34 @@ function addError(statusCode: string) {
 }
 
 function getErrors(statusCode: string): { main: JQuery<HTMLElement>, secondary: JQuery<HTMLElement> } {
-	const errors = {
-		main: $("<span/>", {
-			class: "main-text"
-		}),
-		secondary: $("<a/>", {
-			class: "secondary-text",
-		})
-	}
+	const main = $("<span/>", {
+		class: "main-text"
+	});
+	const secondary = $("<a/>", {
+		class: "secondary-text",
+	});
+
 	switch (statusCode) {
 		case StatusCodes.NotFound:
-			errors.main.text("Your Time didn't find any timemarks for this video.");
-			errors.secondary.text("Submit your own.");
-			errors.secondary.click(createTimemark);
+			main.text("Your Time didn't find any timemarks for this video.");
+			secondary.text("Submit your own.");
+			secondary.click(createTimemark);
 			break;
 		case StatusCodes.Error:
-			errors.main.text("Your Time could not connect to the server.");
-			errors.secondary.text("Try again later.");
-			errors.secondary.click(null);
+			main.text("Your Time could not connect to the server.");
+			secondary.text("Try again later.");
+			secondary.click(null);
 			break;
 		default:
-			errors.main.text("Unknown status code.");
-			errors.secondary.text("Are you using the latest Your Time version?")
-			errors.secondary.click(() => {
+			main.text("Unknown status code.");
+			secondary.text("Are you using the latest Your Time version?")
+			secondary.click(() => {
 				window.open(ExtensionURL, "_blank").focus();
 			});
 			break;
 	}
 
-	return errors
+	return { main, secondary }
 }
 
 function getTimemark(timemarkData: any): any {
