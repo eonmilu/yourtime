@@ -122,7 +122,6 @@ function makeTimemark(timemarkData: any): JQuery<HTMLElement> {
 		const comment = $(timemark).attr("comment");
 		details.text(comment);
 
-		const parentTimemark = timemark;
 		// Get given vote number by the server
 		const votesReceived = Number($(timemark).attr("votes"));
 
@@ -130,14 +129,14 @@ function makeTimemark(timemarkData: any): JQuery<HTMLElement> {
 			id: "votes"
 		});
 
-		const upvote = makeVote(parentTimemark, Votes.Up);
-		const downvote = makeVote(parentTimemark, Votes.Down);
+		const upvote = makeVote(timemark, Votes.Up);
+		const downvote = makeVote(timemark, Votes.Down);
 
 		const voteNumber = $("<span/>", {
 			id: "number"
 		}).text(readablizeNumber(Number($(timemark).attr("votes"))));
 
-		switch ($(parentTimemark).attr("status")) {
+		switch ($(timemark).attr("status")) {
 			case "upvoted":
 				// Add a vote
 				voteNumber.text(readablizeNumber(votesReceived + 1));
