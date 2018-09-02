@@ -10,7 +10,10 @@ const StatusCodes = {
 	NotFound: "210",
 	Error: "220"
 };
-
+const Votes = {
+	Down: 0,
+	Up: 1
+}
 
 var lastId = "";
 var videoID = getCurrentVideoID();
