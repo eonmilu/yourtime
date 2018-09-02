@@ -17,4 +17,4 @@ Dependencies:
 - `@types/jquery` (Install on src/ folder with `npm`)
 - `jquery`        (Install on src/ folder with `npm`)
 
-Navigate to your target browser in the src/ folder and run `make`
+Navigate to your target browser in the src/ folder and run `make target={{{}}}` where `{{{}}}` is one of `firefox` or `chrome` (Chrome not yet supported)
