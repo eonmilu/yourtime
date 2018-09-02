@@ -34,7 +34,7 @@
 
   "content_scripts": [{
     "matches": ["https://www.youtube.com/*"],
-    "run_at": "document_idle",
+    "run_at": "document_end",
     "js": ["scripts/jquery.min.js", "scripts/scriptloader.js"]
   }, {
     "matches": ["https://oxygenrain.com/yourtime/auth/*"],

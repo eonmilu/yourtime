@@ -1,7 +1,7 @@
 declare var browser: any;
-const META_ELEMENT_INTERVAL = 10;
+const MetaElementInterval = 10;
 
-const intervailIDToken = setInterval(function () {
+const IntervailIDToken = setInterval(function () {
     if ($("meta[name='your-time-token-local'").length) {
         const credentials = JSON.parse($("meta[name='your-time-token-local'")
             .attr("content"));
@@ -12,25 +12,25 @@ const intervailIDToken = setInterval(function () {
             }
         }).then(
             () => {
-                clearInterval(intervailIDToken);
+                clearInterval(IntervailIDToken);
                 $("meta[name='your-time-token-local'").remove();
             },
             error => {
                 console.log(error);
             });
     }
-}, META_ELEMENT_INTERVAL);
+}, MetaElementInterval);
 
-const intervalIDRemove = setInterval(function () {
+const IntervalIDRemove = setInterval(function () {
     if ($("meta[name='your-time-token-local-remove'").length) {
         browser.storage.local.remove("yourtimeauth").then(
             () => {
                 console.log("Storage removed")
-                clearInterval(intervalIDRemove);
+                clearInterval(IntervalIDRemove);
                 $("meta[name='your-time-token-local-remove'").remove();
             },
             error => {
                 console.log(error)
             });
     }
-}, META_ELEMENT_INTERVAL);
+}, MetaElementInterval);

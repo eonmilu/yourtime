@@ -16,10 +16,10 @@ yourtime: $(target)/scripts/* common/*
 	cp node_modules/jquery/LICENSE.txt    $(dir)/LEGAL/THIRD_PARTIES/jquery
 
 	# Compile TypeScript
-	tsc --outFile $(dir)/scripts/scriptloader.js $(target)/scripts/scriptloader_ts/*
-	tsc --outFile $(dir)/scripts/oxygenrain.js   $(target)/scripts/oxygenrain_ts/*
-	tsc --outFile $(dir)/scripts/content.js      $(target)/scripts/content_ts/*
-	tsc --outFile $(dir)/scripts/popup.js        $(target)/scripts/popup_ts/*
+	tsc -t ES6 --outFile $(dir)/scripts/scriptloader.js $(target)/scripts/scriptloader_ts/*.ts
+	tsc -t ES6 --outFile $(dir)/scripts/oxygenrain.js   $(target)/scripts/oxygenrain_ts/*
+	tsc -t ES6 --outFile $(dir)/scripts/content.js      $(target)/scripts/content_ts/*
+	tsc -t ES6 --outFile $(dir)/scripts/popup.js        $(target)/scripts/popup_ts/*
 
 	# Compile SCSS
 	sass common/resources/stylesheet.scss $(dir)/resources/stylesheet.css
@@ -27,7 +27,7 @@ yourtime: $(target)/scripts/* common/*
 
 	# Copy manifest and libraries
 	cp $(target)/manifest.json $(dir)/
-	cp node_modules/jquery/dist/jquery.min.js $(dir)/scripts/jquery.min.js
+	cp node_modules/jquery/dist/jquery.js $(dir)/scripts/jquery.min.js
 
 	# Move popup.js from scripts/ to popup/
 	mv $(dir)/scripts/popup.js $(dir)/popup/popup.js
