@@ -41,8 +41,10 @@ function addMainStructure(): void {
 function processResponse(statusCode: string, response: string): void {
 	if (statusCode == StatusCodes.Found) {
 		const timemarks = JSON.parse(response);
-		// Get timemark from data and append it to main structure
-		timemarks.map(getTimemark).forEach($("#your-time-submissions").append);
+		// forEach must be in the lambda for jQuery only use the first parameter
+		timemarks.map(makeTimemark).forEach(element => {
+			$("#your-time-submissions").append(element)
+		});
 		addDetailsDiv();
 	} else {
 		const errors = getErrors(statusCode);
@@ -103,112 +105,37 @@ function getErrors(statusCode: string): { main: JQuery<HTMLElement>, secondary: 
 	return { main, secondary }
 }
 
-function getTimemark(timemarkData: any): any {
-	const timemark = $("<div/>", {
-		class: "timemark",
-		ID: timemarkData.id,
-		comment: timemarkData.content,
-		votes: timemarkData.votes,
-		seconds: timemarkData.timemark,
-		status: "unset"
-	}).text(secondsToTimestamp(timemarkData.timemark));
-	timemark.attr("style", `background-color: ${votesToRGBA(timemarkData.votes)}`);
+function makeTimemark(timemarkData: any): JQuery<HTMLElement> {
+	const timemark = makeBaseTimemark(timemarkData);
+
+	timemark.on("dblclick", () => {
+		player.seekTo($(timemark).attr("seconds"));
+	});
+
+	timemark.hover(
+		() => { $(timemark).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, true)}`); },
+		() => { $(timemark).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, false)}`); }
+	);
 
 	timemark.click(function () {
 		const details = $("#your-time-details");
-		const comment = $(this).attr("comment");
+		const comment = $(timemark).attr("comment");
 		details.text(comment);
 
-		const parentTimemark = this;
+		const parentTimemark = timemark;
 		// Get given vote number by the server
-		const votesReceived = Number($(this).attr("votes"));
+		const votesReceived = Number($(timemark).attr("votes"));
 
 		const votes = $("<div/>", {
 			id: "votes"
 		});
 
-		const upvote = $("<div/>", {
-			id: "upvote"
-		}).click(function () {
-			// Read the status (upvoted, unset, downvoted)
-			const Status = $(parentTimemark).attr("status");
-			switch (status) {
-				case "upvoted":
-					// Set parent timemarks' status to unset
-					$(parentTimemark).attr("status", "unset");
-					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
-
-					// Set vote number to default
-					$("#votes #number").text(readablizeNumber(votesReceived));
-
-
-					// Set everything gray
-					$(this).attr("style", "border-bottom: 8px solid gray;");
-					$("#votes #number").attr("style", "color: gray");
-					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
-					break;
-				case "unset":
-				case "downvoted":
-					// Set parent timemarks' status to upvoted
-					$(parentTimemark).attr("status", "upvoted");
-					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
-
-					// Add a vote
-					$("#votes #number").text(readablizeNumber(votesReceived + 1));
-
-
-					// Set downvote gray, number and self orange
-					$(this).attr("style", "border-bottom: 8px solid orange;");
-					$("#votes #number").attr("style", "color: orange");
-					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
-					break;
-				default:
-					break;
-			}
-		});
-		const downvote = $("<div/>", {
-			id: "downvote"
-		}).click(function () {
-			// Read the status (upvoted, unset, downvoted)
-			const Status = $(parentTimemark).attr("status");
-			switch (status) {
-				case "downvoted":
-					// Set parent timemarks' status to unset
-					$(parentTimemark).attr("status", "unset");
-					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
-
-					// Set vote number to default
-					$("#votes #number").text(readablizeNumber(votesReceived));
-
-
-					// Set everything gray
-					$(this).attr("style", "border-bottom: 8px solid gray;");
-					$("#votes #number").attr("style", "color: gray");
-					$("#votes #downvote").attr("style", "border-bottom: 8px solid gray;");
-					break;
-				case "unset":
-				case "upvoted":
-					// Set parent timemarks' status to downvoted
-					$(parentTimemark).attr("status", "downvoted");
-					changeServerVotes($(parentTimemark).attr("status"), $(parentTimemark).attr("ID"));
-
-					// Substract a vote
-					$("#votes #number").text(readablizeNumber(votesReceived - 1));
-
-
-					// Set upvote gray, number and self blue
-					$(this).attr("style", "border-bottom: 8px solid blue;");
-					$("#votes #number").attr("style", "color: blue");
-					$("#votes #upvote").attr("style", "border-bottom: 8px solid gray;");
-					break;
-				default:
-					break;
-			}
-		});
+		const upvote = makeVote(parentTimemark, Votes.Up);
+		const downvote = makeVote(parentTimemark, Votes.Down);
 
 		const voteNumber = $("<span/>", {
 			id: "number"
-		}).text(readablizeNumber(Number($(this).attr("votes"))));
+		}).text(readablizeNumber(Number($(timemark).attr("votes"))));
 
 		switch ($(parentTimemark).attr("status")) {
 			case "upvoted":
@@ -235,22 +162,71 @@ function getTimemark(timemarkData: any): any {
 
 		votes.append(upvote, voteNumber, downvote);
 		details.prepend(votes);
-
-		$(this).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, true)}`);
 	});
 
-	timemark.on("dblclick", function () {
-		player.seekTo($(this).attr("seconds"));
-	});
+	return timemark
+}
 
-	timemark.hover(
-		function () {
-			$(this).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, true)}`);
-		},
-		function () {
-			$(this).attr("style", `background-color: ${votesToRGBA(timemarkData.votes, false)}`);
+function makeVote(parentTimemark: JQuery<HTMLElement>, type: number) {
+	const isDownvote = type == Votes.Down;
+
+	const vote = $("<div/>", {
+		id: isDownvote ? "downvote" : "upvote"
+	}).click(function () {
+		const status = $(parentTimemark).attr("status");
+		// Decide if the user clicked to undo their vote:
+		// based on the type passed (Votes.Up/Votes.Down), convert it to text
+		// and compare it to the status of the parent timemark.
+		// If it's equal, it means the user wants to undo it.
+		// Else, it is treated like a normal vote.
+		const undoVote = (type == Votes.Up ? "upvoted" : "downvoted") == status;
+
+		if (undoVote) {
+			setVote(this, parentTimemark);
+		} else {
+			setVote(this, parentTimemark, {
+				newStatus: isDownvote ? "downvoted" : "upvoted",
+				vote: isDownvote ? -1 : 1,
+				color: isDownvote ? "blue" : "orange",
+				oppositeID: isDownvote ? "#upvote" : "#downvote"
+			})
 		}
-	);
+	});
+	return vote;
+}
+
+function setVote(env: HTMLElement, parentTimemark: JQuery<HTMLElement>, params: {
+	newStatus: string, vote: number, color: string, oppositeID: string
+} = {
+		newStatus: "unset",
+		vote: 0,
+		color: "gray",
+		oppositeID: "#upvote #downvote"
+	}) {
+	const votesReceived = Number($(parentTimemark).attr("votes"));
+	const status = $(parentTimemark).attr("status");
+	const { newStatus, vote, color, oppositeID } = params;
+
+	$(parentTimemark).attr("status", newStatus);
+	changeServerVotes(status, $(parentTimemark).attr("ID"));
+	// Set vote number to default
+	$("#votes #number").text(readablizeNumber(votesReceived + vote));
+	// Set everything gray
+	$(env).attr("style", `border-bottom: 8px solid ${color};`);
+	$("#votes #number").attr("style", `color: ${color}`);
+	$(`#votes ${oppositeID}`).attr("style", "border-bottom: 8px solid gray;");
+}
+
+function makeBaseTimemark(timemarkData: any) {
+	const timemark = $("<div/>", {
+		class: "timemark",
+		ID: timemarkData.id,
+		comment: timemarkData.content,
+		votes: timemarkData.votes,
+		seconds: timemarkData.timemark,
+		status: "unset"
+	}).text(secondsToTimestamp(timemarkData.timemark));
+	timemark.attr("style", `background-color: ${votesToRGBA(timemarkData.votes)}`);
 
 	return timemark
 }
