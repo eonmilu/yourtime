@@ -203,10 +203,10 @@ function setVote(env: HTMLElement, parentTimemark: JQuery<HTMLElement>, params: 
 		oppositeID: "#upvote #downvote"
 	}) {
 	const votesReceived = Number($(parentTimemark).attr("votes"));
-	const status = $(parentTimemark).attr("status");
 	const { newStatus, vote, color, oppositeID } = params;
 
 	$(parentTimemark).attr("status", newStatus);
+	const status = $(parentTimemark).attr("status");
 	changeServerVotes(status, $(parentTimemark).attr("ID"));
 	// Set vote number to default
 	$("#votes #number").text(readablizeNumber(votesReceived + vote));
