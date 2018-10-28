@@ -38,11 +38,13 @@ function addMainStructure(): void {
 }
 
 // Parse and add the response to the DOM
-function processResponse(statusCode: string, response: string): void {
+function processResponse(statusCode: string, rp: string): void {
 	if (statusCode == StatusCodes.Found) {
-		const timemarks = JSON.parse(response);
-		// forEach must be in the lambda for jQuery only use the first parameter
-		timemarks.map(makeTimemark).forEach(element => {
+		const response = JSON.parse(rp);
+		// forEach must be in the lambda so that jQuery only uses the first parameter
+		response.timemarks.map(timemark => {
+			return makeTimemark(timemark, response.authors);
+		}).forEach(element => {
 			$("#your-time-submissions").append(element)
 		});
 		addDetailsDiv();
@@ -86,7 +88,7 @@ function getErrors(statusCode: string): { main: JQuery<HTMLElement>, secondary: 
 		case StatusCodes.NotFound:
 			main.text("Your Time didn't find any timemarks for this video.");
 			secondary.text("Submit your own.");
-			secondary.click(createTimemark);
+			secondary.click(createUserTimemark);
 			break;
 		case StatusCodes.Error:
 			main.text("Your Time could not connect to the server.");
@@ -105,7 +107,7 @@ function getErrors(statusCode: string): { main: JQuery<HTMLElement>, secondary: 
 	return { main, secondary }
 }
 
-function makeTimemark(timemarkData: any): JQuery<HTMLElement> {
+function makeTimemark(timemarkData: any, authors: any): JQuery<HTMLElement> {
 	const timemark = makeBaseTimemark(timemarkData);
 
 	timemark.on("dblclick", () => {
@@ -121,6 +123,15 @@ function makeTimemark(timemarkData: any): JQuery<HTMLElement> {
 		const details = $("#your-time-details");
 		const comment = $(timemark).attr("comment");
 		details.text(comment);
+
+		const authorID = $(timemark).attr("author");
+		const authorData = authors.find(a => {
+			return a.id == authorID
+		});
+		const author = $("<a/>", {
+			href: authorData.url,
+			title: "User #" + authorData.id
+		}).text(authorData.username)
 
 		// Get given vote number by the server
 		const votesReceived = Number($(timemark).attr("votes"));
@@ -160,6 +171,7 @@ function makeTimemark(timemarkData: any): JQuery<HTMLElement> {
 		}
 
 		votes.append(upvote, voteNumber, downvote);
+		details.prepend(author);
 		details.prepend(votes);
 	});
 
@@ -223,14 +235,15 @@ function makeBaseTimemark(timemarkData: any) {
 		comment: timemarkData.content,
 		votes: timemarkData.votes,
 		seconds: timemarkData.timemark,
-		status: "unset"
+		status: "unset",
+		author: timemarkData.author
 	}).text(secondsToTimestamp(timemarkData.timemark));
 	timemark.attr("style", `background-color: ${votesToRGBA(timemarkData.votes)}`);
 
 	return timemark
 }
 
-function createTimemark() {
+function createUserTimemark() {
 
 }
 
