@@ -62,6 +62,20 @@ $url-color-hover: #333333;
         display: flex;
         align-items: center;
 
+        #author {
+            margin: 0px 6px 0px 3px;
+            text-decoration: transparent;
+            color: $url-color;
+
+            :hover {
+                color: $url-color-hover;
+            }
+
+            :visited {
+                color: $url-color;
+            }
+        }
+
         #votes {
             display: flex;
             justify-content: center;

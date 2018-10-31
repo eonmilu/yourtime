@@ -122,7 +122,7 @@ function makeTimemark(timemarkData: any, authors: any): JQuery<HTMLElement> {
 	timemark.click(function () {
 		const details = $("#your-time-details");
 		const comment = $(timemark).attr("comment");
-		details.text(comment);
+		details.text(truncate(comment, 140));
 
 		const authorID = $(timemark).attr("author");
 		const authorData = authors.find(a => {
@@ -130,8 +130,9 @@ function makeTimemark(timemarkData: any, authors: any): JQuery<HTMLElement> {
 		});
 		const author = $("<a/>", {
 			href: authorData.url,
-			title: "User #" + authorData.id
-		}).text(authorData.username)
+			title: "User #" + authorData.id,
+			id: "author"
+		}).text(truncate(authorData.username, 16))
 
 		// Get given vote number by the server
 		const votesReceived = Number($(timemark).attr("votes"));

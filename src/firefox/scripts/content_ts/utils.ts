@@ -72,3 +72,12 @@ function readablizeNumber(number: number): string {
 	const e = Math.floor(Math.log(Math.abs(number)) / Math.log(1000));
 	return Math.round((number / Math.pow(1000, e))) + suffixes[e];
 }
+
+// Truncate a string up to a number of characters - substitute's length
+function truncate(s: string, charLeft: number, substitute = "..."): string {
+	if (s.length - substitute.length >= charLeft) return s;
+	if (s.length <= charLeft) return s;
+
+	const truncated = s.substring(0, charLeft - substitute.length) + substitute;
+	return truncated
+}
