@@ -42,6 +42,10 @@ $url-color-hover: #333333;
         flex-direction: row;
 
         .timemark {
+            border: none;
+            background: none;
+            font-family: Lato;
+
             padding: 2px;
             margin: 2px 2px 0px 2px;
             font-weight: 400;

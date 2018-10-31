@@ -230,7 +230,7 @@ function setVote(env: HTMLElement, parentTimemark: JQuery<HTMLElement>, params: 
 }
 
 function makeBaseTimemark(timemarkData: any) {
-	const timemark = $("<div/>", {
+	const timemark = $("<button/>", {
 		class: "timemark",
 		ID: timemarkData.id,
 		comment: timemarkData.content,
