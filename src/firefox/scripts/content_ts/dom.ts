@@ -7,6 +7,9 @@ function onLayoutLoaded(): void {
 		data: {
 			v: videoID
 		},
+		xhrFields: {
+			withCredentials: true
+		},
 		timeout: DefaultTimeout,
 	}).always(() => {
 		addMainStructure();
@@ -280,6 +283,9 @@ function changeServerVotes(action: string, id: string) {
 		data: {
 			id: id,
 			action: action
+		},
+		xhrFields: {
+			withCredentials: true
 		},
 		timeout: DefaultTimeout
 	}).done(function () {
