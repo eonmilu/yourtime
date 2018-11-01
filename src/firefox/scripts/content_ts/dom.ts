@@ -120,6 +120,16 @@ function makeTimemark(timemarkData: any, authors: any): JQuery<HTMLElement> {
 	);
 
 	timemark.click(function () {
+		// Set all other timemarks' font lighter
+		const timemarks: any = $(".timemark");
+		// forEach loop apparently does not exist on timemarks
+		for (let i = 0; i < timemarks.length; i++) {
+			const element = timemarks[i];
+			$(element).attr("class", "timemark");
+		}
+		// Set this font bolder
+		$(timemark).attr("class", "timemark clicked");
+
 		const details = $("#your-time-details");
 		const comment = $(timemark).attr("comment");
 		details.text(truncate(comment, 140));
