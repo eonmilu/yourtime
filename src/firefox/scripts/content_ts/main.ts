@@ -3,7 +3,7 @@ const InsertURL = "https://oxygenrain.com/yourtime/insert";
 const ExtensionURL = "https://addons.mozilla.org/firefox/addon/yourtime/";
 const VotesURL = "https://oxygenrain.com/yourtime/votes";
 const Meta = JSON.parse($("meta[name='your-time-meta'").attr('content'));
-const DefaultTimeout = 1500;
+const DefaultTimeout = 3000;
 const Playing = 1;
 const StatusCodes = {
 	Found: "200",
