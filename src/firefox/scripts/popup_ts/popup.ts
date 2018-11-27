@@ -1,5 +1,5 @@
 declare var browser: any;
-const LogInURL = "https://oxygenrain.com/yourtime/auth/google.html";
+const LogInURL = "https://oxygenrain.com/yourtime/auth/auth.html";
 
 browser.storage.local.get("yourtimeauth")
 	.then((content) => {
