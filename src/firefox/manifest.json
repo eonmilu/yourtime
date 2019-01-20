@@ -6,7 +6,7 @@
 
   "applications": {
     "gecko": {
-      "id": "yourtime@oxygenrain.com",
+      "id": "yourtime@xmi.lu",
       "strict_min_version": "42.0"
     }
   },
@@ -20,7 +20,7 @@
 
   "permissions": [
     "https://www.youtube.com/",
-    "https://oxygenrain.com/yourtime/",
+    "https://xmi.lu/yourtime/",
     "activeTab",
     "storage"
   ],
@@ -37,9 +37,9 @@
     "run_at": "document_end",
     "js": ["scripts/jquery.min.js", "scripts/scriptloader.js"]
   }, {
-    "matches": ["https://oxygenrain.com/yourtime/auth/*"],
+    "matches": ["https://xmi.lu/yourtime/auth/*"],
     "run_at": "document_idle",
-    "js": ["scripts/jquery.min.js", "scripts/oxygenrain.js"]
+    "js": ["scripts/jquery.min.js", "scripts/xmi.lu.js"]
   }],
 
   "browser_action": {

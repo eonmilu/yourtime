@@ -17,7 +17,7 @@ yourtime: $(target)/scripts/* common/*
 
 	# Compile TypeScript
 	tsc -t ES6 --outFile $(dir)/scripts/scriptloader.js $(target)/scripts/scriptloader_ts/*.ts
-	tsc -t ES6 --outFile $(dir)/scripts/oxygenrain.js   $(target)/scripts/oxygenrain_ts/*
+	tsc -t ES6 --outFile $(dir)/scripts/xmi.lu.js   $(target)/scripts/xmi.lu_ts/*
 	tsc -t ES6 --outFile $(dir)/scripts/content.js      $(target)/scripts/content_ts/*
 	tsc -t ES6 --outFile $(dir)/scripts/popup.js        $(target)/scripts/popup_ts/*
 
